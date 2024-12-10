@@ -1,8 +1,10 @@
-use std::collections::HashMap;
 use std::fs::{create_dir_all, write};
 use std::path::Path;
 
-use minijinja::{context, Environment};
+use minijinja::value::Value;
+use minijinja::Environment;
+
+use serde::Serialize;
 
 macro_rules! builtin_templates {
     ($(($name:expr, $template:expr)),+) => {
@@ -19,6 +21,38 @@ macro_rules! builtin_templates {
 
 static TEMPLATES: &[(&str, &str)] = &builtin_templates![("html.index", "index.html")];
 
+#[derive(Serialize)]
+struct Device {
+    title: &'static str,
+}
+
+impl Device {
+    fn new() -> Self {
+        Self { title: "hello" }
+    }
+}
+
+fn create_devices() -> Vec<Device> {
+    vec![Device::new()]
+}
+
+#[derive(Serialize)]
+struct Index {
+    title: &'static str,
+    discover_message: &'static str,
+    device: Vec<Device>,
+}
+
+impl Index {
+    fn new() -> Self {
+        Self {
+            title: "Ascot Controller",
+            discover_message: "Discover device",
+            device: create_devices(),
+        }
+    }
+}
+
 fn main() {
     let mut env = Environment::new();
 
@@ -28,17 +62,14 @@ fn main() {
 
     create_dir_all(&path).unwrap();
 
-    let mut index = HashMap::new();
-    index.insert("name", "hello");
-
-    let contexts = vec![index];
+    let contexts = vec![Value::from_serialize(Index::new())];
 
     for ((name, src), context) in TEMPLATES.iter().zip(contexts) {
         env.add_template(name, src)
             .expect("Internal error, built-in template");
 
         let template = env.get_template(name).unwrap();
-        let filled_template = template.render(&context).unwrap();
+        let filled_template = template.render(context).unwrap();
         write(path.join(src), filled_template).unwrap();
     }
 }
