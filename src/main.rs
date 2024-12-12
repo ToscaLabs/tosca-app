@@ -26,12 +26,18 @@ macro_rules! builtin_templates {
 }
 
 static TEMPLATES: &[(&str, &str)] = &builtin_templates![
+    ("css.custom", "custom.css"),
+    ("js.custom", "custom.js"),
     ("layout", "layout.html"),
     ("head", "head.html"),
-    ("index", "index.html"),
     ("navbar", "navbar.html"),
+    ("scripts", "scripts.html"),
     ("footer", "footer.html"),
-    ("devices", "devices.html")
+    ("index", "index.html"),
+    ("devices", "devices.html"),
+    ("error", "error.html"),
+    ("modal-device", "modal-device.html"),
+    ("modal-hazards", "modal-hazards.html")
 ];
 
 struct AppState {
