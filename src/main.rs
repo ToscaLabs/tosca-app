@@ -1,10 +1,16 @@
-use std::fs::{create_dir_all, write};
-use std::path::Path;
+mod index;
+mod policy;
 
-use minijinja::value::Value;
+use std::sync::Arc;
+
+use axum::{routing::get, Router};
+
 use minijinja::Environment;
 
-use serde::Serialize;
+use crate::index::index;
+use crate::policy::policy;
+
+const TITLE: &str = "Ascot Controller";
 
 macro_rules! builtin_templates {
     ($(($name:expr, $template:expr)),+) => {
@@ -19,57 +25,42 @@ macro_rules! builtin_templates {
     }
 }
 
-static TEMPLATES: &[(&str, &str)] = &builtin_templates![("html.index", "index.html")];
+static TEMPLATES: &[(&str, &str)] = &builtin_templates![
+    ("layout", "layout.html"),
+    ("head", "head.html"),
+    ("index", "index.html"),
+    ("navbar", "navbar.html"),
+    ("footer", "footer.html"),
+    ("devices", "devices.html")
+];
 
-#[derive(Serialize)]
-struct Device {
-    title: &'static str,
+struct AppState {
+    env: Environment<'static>,
 }
 
-impl Device {
-    fn new() -> Self {
-        Self { title: "hello" }
-    }
-}
-
-fn create_devices() -> Vec<Device> {
-    vec![Device::new()]
-}
-
-#[derive(Serialize)]
-struct Index {
-    title: &'static str,
-    discover_message: &'static str,
-    device: Vec<Device>,
-}
-
-impl Index {
-    fn new() -> Self {
-        Self {
-            title: "Ascot Controller",
-            discover_message: "Discover device",
-            device: create_devices(),
-        }
-    }
-}
-
-fn main() {
+#[tokio::main]
+async fn main() {
     let mut env = Environment::new();
 
-    // env.add_filter("comment_license", comment_license);
-
-    let path = Path::new("render");
-
-    create_dir_all(&path).unwrap();
-
-    let contexts = vec![Value::from_serialize(Index::new())];
-
-    for ((name, src), context) in TEMPLATES.iter().zip(contexts) {
+    for (name, src) in TEMPLATES.iter() {
         env.add_template(name, src)
             .expect("Internal error, built-in template");
-
-        let template = env.get_template(name).unwrap();
-        let filled_template = template.render(context).unwrap();
-        write(path.join(src), filled_template).unwrap();
     }
+
+    // Pass environment to handlers via state
+    let app_state = Arc::new(AppState { env });
+
+    // define routes
+    let app = Router::new()
+        .route("/", get(index))
+        .route("/privacy", get(policy))
+        .with_state(app_state);
+
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
+        .await
+        .unwrap();
+
+    println!("listening on {}", listener.local_addr().unwrap());
+
+    axum::serve(listener, app).await.unwrap();
 }
