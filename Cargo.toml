@@ -1,12 +1,13 @@
 [package]
-name = "ascot-controller"
+name = "controller"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-axum = "0.7"
-minijinja = "2.4.0"
+ascot-library = { path = "../ascot-library" }
+axum = "0.8"
+minijinja = "2.5.0"
 serde = {version = "1.0", features = ["derive"] }
 tokio = { version = "1.0", features = ["full"] }

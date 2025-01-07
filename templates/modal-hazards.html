@@ -1,4 +1,4 @@
-{{#each hazards as |hazard|}}
+{% for hazard in index.hazards %}
 <div id="hazard-{{ hazard.id }}" class="modal">
   <div class="modal-background"></div>
 
@@ -8,13 +8,12 @@
           <h1>{{ hazard.name }}</h1>
 
           <p>{{ hazard.description }}</p>
-          <p>{{ hazard.category.name }}</p>
-          <p>{{ hazard.category.description }}</p>
+          <p>{{ hazard.category_name }}</p>
+          <p>{{ hazard.category_description }}</p>
       </div>
     </div>
   </div>
 
   <button class="modal-close is-large" aria-label="close"></button>
 </div>
-
-{{/each}}
+{% endfor %}
