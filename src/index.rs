@@ -3,7 +3,7 @@ use serde::Serialize;
 use std::sync::Arc;
 
 use ascot_library::device::DeviceKind;
-use ascot_library::hazards::Category;
+use ascot_library::hazards::{Category, HazardData};
 
 use axum::extract::State;
 use axum::http::StatusCode;
@@ -31,25 +31,10 @@ fn create_devices() -> Vec<Device> {
     ]
 }
 
-#[derive(Serialize)]
-struct HazardData {
-    id: u16,
-    name: &'static str,
-    description: &'static str,
-    category_name: &'static str,
-    category_description: &'static str,
-}
-
 fn create_hazards() -> Vec<HazardData> {
     let mut hazards = Vec::new();
     for safety in Category::Safety.hazards() {
-        hazards.push(HazardData {
-            id: safety.id(),
-            name: safety.name(),
-            description: safety.description(),
-            category_name: safety.category().name(),
-            category_description: safety.category().description(),
-        });
+        hazards.push(safety.data());
     }
     hazards
 
