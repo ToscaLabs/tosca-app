@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use ascot_library::device::DeviceKind;
-use ascot_library::hazards::ALL_HAZARDS;
+use ascot_library::hazards::{Hazard, ALL_HAZARDS};
 
 use axum::extract::State;
 use axum::http::StatusCode;
@@ -34,7 +34,7 @@ pub(crate) async fn index(State(state): State<Arc<AppState>>) -> Result<Html<Str
             no_devices_message => "No devices found.",
             discover_message => "Discover device",
             devices => vec![Device::new(DeviceKind::Light), Device::new(DeviceKind::Camera)],
-            hazards => ALL_HAZARDS.iter().map(|hazard| hazard.data()).collect::<Vec<_>>(),
+            hazards => ALL_HAZARDS.iter().map(Hazard::data).collect::<Vec<_>>(),
             footer => footer(),
         })
         .unwrap();

@@ -73,7 +73,7 @@ struct AppState {
 async fn main() {
     let mut env = Environment::new();
 
-    for (name, src) in TEMPLATES.iter() {
+    for (name, src) in TEMPLATES {
         env.add_template(name, src)
             .expect("Internal error, built-in template");
     }
