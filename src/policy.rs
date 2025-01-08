@@ -6,14 +6,14 @@ use axum::response::Html;
 
 use minijinja::context;
 
-use crate::{AppState, TITLE};
+use crate::AppState;
 
 pub(crate) async fn policy(State(state): State<Arc<AppState>>) -> Result<Html<String>, StatusCode> {
     let template = state.env.get_template("policy").unwrap();
 
     let rendered = template
         .render(context! {
-            title => TITLE,
+            title => "Policies",
         })
         .unwrap();
 

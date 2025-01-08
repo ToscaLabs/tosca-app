@@ -3,7 +3,7 @@ use serde::Serialize;
 use std::sync::Arc;
 
 use ascot_library::device::DeviceKind;
-use ascot_library::hazards::{Category, Hazards};
+use ascot_library::hazards::Category;
 
 use axum::extract::State;
 use axum::http::StatusCode;
@@ -11,7 +11,7 @@ use axum::response::Html;
 
 use minijinja::context;
 
-use crate::{AppState, TITLE};
+use crate::AppState;
 
 #[derive(Serialize)]
 struct Device {
@@ -33,18 +33,28 @@ fn create_devices() -> Vec<Device> {
 
 #[derive(Serialize)]
 struct HazardData {
-    kind: DeviceKind,
+    id: u16,
+    name: &'static str,
+    description: &'static str,
+    category_name: &'static str,
+    category_description: &'static str,
 }
 
 fn create_hazards() -> Vec<HazardData> {
-    let mut HazardData = Vec::new();
-    let mut safety = Hazards::init_with_elements(Category::Safety.hazards());
-    let privacy = Hazards::init_with_elements(Category::Privacy.hazards());
-    let financial = Hazards::init_with_elements(Category::Financial.hazards());
+    let mut hazards = Vec::new();
+    for safety in Category::Safety.hazards() {
+        hazards.push(HazardData {
+            id: safety.id(),
+            name: safety.name(),
+            description: safety.description(),
+            category_name: safety.category().name(),
+            category_description: safety.category().description(),
+        });
+    }
+    hazards
 
-    safety.merge(&privacy);
-    safety.merge(&financial);
-    safety
+    //let privacy = Hazards::init_with_elements(Category::Privacy.hazards());
+    //let financial = Hazards::init_with_elements(Category::Financial.hazards());
 }
 
 pub(crate) async fn index(State(state): State<Arc<AppState>>) -> Result<Html<String>, StatusCode> {
@@ -52,7 +62,7 @@ pub(crate) async fn index(State(state): State<Arc<AppState>>) -> Result<Html<Str
 
     let rendered = template
         .render(context! {
-            title => TITLE,
+            title => "Home",
             no_devices_message => "No devices found.",
             discover_message => "Discover device",
             devices => create_devices(),

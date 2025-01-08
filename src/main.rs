@@ -10,8 +10,6 @@ use minijinja::Environment;
 use crate::index::index;
 use crate::policy::policy;
 
-const TITLE: &str = "Ascot Controller";
-
 macro_rules! builtin_templates {
     ($(($name:expr, $template:expr)),+) => {
         [
