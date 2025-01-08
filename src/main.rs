@@ -5,10 +5,15 @@ use std::sync::Arc;
 
 use axum::{routing::get, Router};
 
+use chrono::Datelike;
+use chrono::Utc;
+
 use minijinja::Environment;
 
 use crate::index::index;
 use crate::policy::policy;
+
+const PROJECT: &str = "Ascot";
 
 macro_rules! builtin_templates {
     ($(($name:expr, $template:expr)),+) => {
@@ -37,6 +42,10 @@ static TEMPLATES: &[(&str, &str)] = &builtin_templates![
     ("modal-device", "modal-device.html"),
     ("modal-hazards", "modal-hazards.html")
 ];
+
+pub(crate) fn footer() -> String {
+    format!("Copyright © {} {PROJECT}", Utc::now().year())
+}
 
 struct AppState {
     env: Environment<'static>,

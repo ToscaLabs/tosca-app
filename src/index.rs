@@ -11,7 +11,7 @@ use axum::response::Html;
 
 use minijinja::context;
 
-use crate::AppState;
+use crate::{footer, AppState};
 
 #[derive(Serialize)]
 struct Device {
@@ -34,6 +34,7 @@ pub(crate) async fn index(State(state): State<Arc<AppState>>) -> Result<Html<Str
             discover_message => "Discover device",
             devices => vec![Device::new(DeviceKind::Light), Device::new(DeviceKind::Camera)],
             hazards => ALL_HAZARDS.iter().map(|hazard| hazard.data()).collect::<Vec<_>>(),
+            footer => footer(),
         })
         .unwrap();
 
