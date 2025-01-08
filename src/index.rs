@@ -1,5 +1,3 @@
-use serde::Serialize;
-
 use std::sync::Arc;
 
 use ascot_library::device::DeviceKind;
@@ -11,7 +9,9 @@ use axum::response::Html;
 
 use minijinja::context;
 
-use crate::{footer, AppState};
+use serde::Serialize;
+
+use crate::{footer, AppState, NAVBAR};
 
 #[derive(Serialize)]
 struct Device {
@@ -30,6 +30,7 @@ pub(crate) async fn index(State(state): State<Arc<AppState>>) -> Result<Html<Str
     let rendered = template
         .render(context! {
             title => "Home",
+            navbar => NAVBAR,
             no_devices_message => "No devices found.",
             discover_message => "Discover device",
             devices => vec![Device::new(DeviceKind::Light), Device::new(DeviceKind::Camera)],

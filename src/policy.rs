@@ -6,7 +6,7 @@ use axum::response::Html;
 
 use minijinja::context;
 
-use crate::AppState;
+use crate::{footer, AppState, NAVBAR};
 
 pub(crate) async fn policy(State(state): State<Arc<AppState>>) -> Result<Html<String>, StatusCode> {
     let template = state.env.get_template("policy").unwrap();
@@ -14,6 +14,8 @@ pub(crate) async fn policy(State(state): State<Arc<AppState>>) -> Result<Html<St
     let rendered = template
         .render(context! {
             title => "Policies",
+            navbar => NAVBAR,
+            footer => footer(),
         })
         .unwrap();
 

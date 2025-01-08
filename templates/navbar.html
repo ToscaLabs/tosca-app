@@ -9,12 +9,11 @@
     </div>
     <div id="navMenu" class="navbar-menu pb-0">
         <div class="navbar-start">
-            <a class="navbar-item has-text-centered" href="#obiettivi">
-                Dispositivi
+            {% for element in navbar %}
+            <a class="navbar-item has-text-centered" href="{{ element.href }}">
+                {{ element.name }}
             </a>
-            <a class="navbar-item has-text-centered" href="./policy.html">
-                Policy
-            </a>
+            {% endfor %}
         </div>
         <div class="navbar-end is-flex is-align-items-center is-justify-content-center">
         </div>

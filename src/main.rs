@@ -10,10 +10,16 @@ use chrono::Utc;
 
 use minijinja::Environment;
 
+use serde::Serialize;
+
 use crate::index::index;
 use crate::policy::policy;
 
 const PROJECT: &str = "Ascot";
+const NAVBAR: &[NavBar] = &[
+    NavBar::new("/", "Devices"),
+    NavBar::new("policy.html", "Policy"),
+];
 
 macro_rules! builtin_templates {
     ($(($name:expr, $template:expr)),+) => {
@@ -45,6 +51,18 @@ static TEMPLATES: &[(&str, &str)] = &builtin_templates![
 
 pub(crate) fn footer() -> String {
     format!("Copyright © {} {PROJECT}", Utc::now().year())
+}
+
+#[derive(Serialize)]
+struct NavBar {
+    href: &'static str,
+    name: &'static str,
+}
+
+impl NavBar {
+    const fn new(href: &'static str, name: &'static str) -> Self {
+        Self { href, name }
+    }
 }
 
 struct AppState {
