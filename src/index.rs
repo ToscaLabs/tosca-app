@@ -3,7 +3,7 @@ use serde::Serialize;
 use std::sync::Arc;
 
 use ascot_library::device::DeviceKind;
-use ascot_library::hazards::{Category, HazardData};
+use ascot_library::hazards::{HazardData, ALL_HAZARDS};
 
 use axum::extract::State;
 use axum::http::StatusCode;
@@ -32,14 +32,7 @@ fn create_devices() -> Vec<Device> {
 }
 
 fn create_hazards() -> Vec<HazardData> {
-    let mut hazards = Vec::new();
-    for safety in Category::Safety.hazards() {
-        hazards.push(safety.data());
-    }
-    hazards
-
-    //let privacy = Hazards::init_with_elements(Category::Privacy.hazards());
-    //let financial = Hazards::init_with_elements(Category::Financial.hazards());
+    ALL_HAZARDS.iter().map(|hazard| hazard.data()).collect()
 }
 
 pub(crate) async fn index(State(state): State<Arc<AppState>>) -> Result<Html<String>, StatusCode> {
