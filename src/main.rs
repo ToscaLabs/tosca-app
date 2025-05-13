@@ -1,9 +1,18 @@
+mod device;
+mod error;
 mod index;
 mod policy;
 
 use std::sync::Arc;
+use std::time::Duration;
 
-use axum::{routing::get, Router};
+use ascot_controller::controller::Controller;
+use ascot_controller::discovery::Discovery;
+
+use axum::{
+    routing::{get, put},
+    Router,
+};
 
 use chrono::Datelike;
 use chrono::Utc;
@@ -12,6 +21,7 @@ use minijinja::Environment;
 
 use serde::Serialize;
 
+use crate::device::discover_devices;
 use crate::index::index;
 use crate::policy::policy;
 
@@ -67,10 +77,20 @@ impl NavBar {
 
 struct AppState {
     env: Environment<'static>,
+    controller: Controller,
 }
 
 #[tokio::main]
 async fn main() {
+    // Create discovery searcher
+    let discovery = Discovery::new("ascot")
+        .timeout(Duration::from_secs(1))
+        .disable_ipv6()
+        .disable_network_interface("docker0");
+
+    // Create Ascot controller
+    let controller = Controller::new(discovery);
+
     let mut env = Environment::new();
 
     for (name, src) in TEMPLATES {
@@ -79,15 +99,16 @@ async fn main() {
     }
 
     // Pass environment to handlers via state
-    let app_state = Arc::new(AppState { env });
+    let app_state = Arc::new(AppState { env, controller });
 
-    // define routes
+    // Define routes
     let app = Router::new()
         .route("/", get(index))
+        .route("/discovery", put(discover_devices))
         .route("/privacy", get(policy))
         .with_state(app_state);
 
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
+    let listener = tokio::net::TcpListener::bind("localhost:3000")
         .await
         .unwrap();
 

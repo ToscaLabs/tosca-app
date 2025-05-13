@@ -6,10 +6,24 @@ edition = "2024"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ascot = { git = "https://github.com/SoftengPoliTo/ascot" }
-ascot-controller = { git = "https://github.com/SoftengPoliTo/ascot" }
-axum = "0.8"
-chrono = "0.4"
-minijinja = "2.10.0"
-serde = {version = "1.0", features = ["derive"] }
-tokio = { version = "1.0", features = ["full"] }
+ascot.version = "0.1.0"
+ascot.git = "https://github.com/SoftengPoliTo/ascot"
+
+ascot-controller.version = "0.1.0"
+ascot-controller.git = "https://github.com/SoftengPoliTo/ascot"
+
+axum.version = "0.8.0"
+axum.default-features = false
+axum.features = ["tokio", "http1", "http2", "json"]
+
+chrono.version = "0.4"
+
+minijinja.version = "2.10.0"
+
+serde.version = "1.0"
+serde.default-features = false
+serde.features = ["derive"]
+
+tokio.version = "1.0"
+tokio.default-features = false
+tokio.features = ["full"]
