@@ -1,5 +1,7 @@
 use std::sync::Arc;
 
+use async_lock::Mutex;
+
 use axum::extract::State;
 use axum::response::Redirect;
 
@@ -23,14 +25,15 @@ impl Device {
 
 // Find devices in the network and save their metadata into the database.
 pub(crate) async fn discover_devices(
-    State(mut state): State<Arc<AppState>>,
+    State(state): State<Arc<Mutex<AppState>>>,
 ) -> Result<Redirect, Error> {
+    let controller = &mut state.lock().await.controller;
     // Discover devices
-    state.controller.discover().await.unwrap();
+    controller.discover().await.unwrap();
 
     // If some devices have been found, delete every old device from the
     // database and insert every discovered devices.
-    if !state.controller.devices().is_empty() {
+    if !controller.devices().is_empty() {
         // Clear the database
         //query_error(clear_database(&mut db), uri).await?;
 

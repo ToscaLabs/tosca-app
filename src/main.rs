@@ -9,6 +9,8 @@ use std::time::Duration;
 use ascot_controller::controller::Controller;
 use ascot_controller::discovery::Discovery;
 
+use async_lock::Mutex;
+
 use axum::{
     routing::{get, put},
     Router,
@@ -99,7 +101,7 @@ async fn main() {
     }
 
     // Pass environment to handlers via state
-    let app_state = Arc::new(AppState { env, controller });
+    let app_state = Arc::new(Mutex::new(AppState { env, controller }));
 
     // Define routes
     let app = Router::new()
