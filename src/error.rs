@@ -6,6 +6,13 @@ use axum::{
     response::{IntoResponse, Response},
 };
 
+pub(crate) fn error_with_info<T, E: std::error::Error>(
+    res: Result<T, E>,
+    description: &str,
+) -> Result<T, Error> {
+    res.map_err(|e| Error::with_description_error(description, e))
+}
+
 #[derive(Serialize)]
 pub(crate) struct Error {
     // Error description.
@@ -15,14 +22,7 @@ pub(crate) struct Error {
 }
 
 impl Error {
-    pub(crate) fn with_description(description: &str) -> Self {
-        Self {
-            description: description.into(),
-            info: None,
-        }
-    }
-
-    pub(crate) fn with_description_error(description: &str, info: impl std::error::Error) -> Self {
+    fn with_description_error(description: &str, info: impl std::error::Error) -> Self {
         Self {
             description: description.into(),
             info: Some(info.to_string()),

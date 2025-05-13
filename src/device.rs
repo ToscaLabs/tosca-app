@@ -5,7 +5,7 @@ use axum::response::Redirect;
 
 use serde::Serialize;
 
-use crate::error::Error;
+use crate::error::{error_with_info, Error};
 use crate::AppState;
 
 #[derive(Serialize)]
@@ -24,11 +24,7 @@ pub(crate) async fn discover_devices(State(state): State<AppState>) -> Result<Re
     let mut controller = state.controller.lock().await;
 
     // Discover devices
-    controller
-        .discover()
-        .await
-        // FIXME: Use std::error for Controller Error
-        .map_err(|_| Error::with_description("Error in discovering devices"))?;
+    error_with_info(controller.discover().await, "Error in discovering devices")?;
 
     // If some devices have been found, delete every old device from the
     // database and insert every discovered devices.
