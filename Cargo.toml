@@ -1,14 +1,15 @@
 [package]
-name = "controller"
+name = "web-controller"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ascot-library = { path = "../ascot-library" }
+ascot = { git = "https://github.com/SoftengPoliTo/ascot" }
+ascot-controller = { git = "https://github.com/SoftengPoliTo/ascot" }
 axum = "0.8"
 chrono = "0.4"
-minijinja = "2.5.0"
+minijinja = "2.10.0"
 serde = {version = "1.0", features = ["derive"] }
 tokio = { version = "1.0", features = ["full"] }

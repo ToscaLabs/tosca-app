@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
-use ascot_library::device::DeviceKind;
-use ascot_library::hazards::{Hazard, ALL_HAZARDS};
+use ascot::device::DeviceKind;
+use ascot::hazards::{Hazard, ALL_HAZARDS};
 
 use axum::extract::State;
 use axum::http::StatusCode;
