@@ -1,6 +1,5 @@
 use ascot::device::DeviceKind;
 
-use axum::debug_handler;
 use axum::extract::State;
 use axum::response::Redirect;
 
@@ -21,7 +20,6 @@ impl Device {
 }
 
 // Find devices in the network and save their metadata into the database.
-#[debug_handler]
 pub(crate) async fn discover_devices(State(state): State<AppState>) -> Result<Redirect, Error> {
     let mut controller = state.controller.lock().await;
 
