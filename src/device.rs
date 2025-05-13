@@ -1,13 +1,10 @@
-use std::sync::Arc;
+use ascot::device::DeviceKind;
 
-use async_lock::Mutex;
-
+use axum::debug_handler;
 use axum::extract::State;
 use axum::response::Redirect;
 
 use serde::Serialize;
-
-use ascot::device::DeviceKind;
 
 use crate::error::Error;
 use crate::AppState;
@@ -24,12 +21,16 @@ impl Device {
 }
 
 // Find devices in the network and save their metadata into the database.
-pub(crate) async fn discover_devices(
-    State(state): State<Arc<Mutex<AppState>>>,
-) -> Result<Redirect, Error> {
-    let controller = &mut state.lock().await.controller;
+#[debug_handler]
+pub(crate) async fn discover_devices(State(state): State<AppState>) -> Result<Redirect, Error> {
+    let mut controller = state.controller.lock().await;
+
     // Discover devices
-    controller.discover().await.unwrap();
+    controller
+        .discover()
+        .await
+        // FIXME: Use std::error for Controller Error
+        .map_err(|_| Error::with_description("Error in discovering devices"))?;
 
     // If some devices have been found, delete every old device from the
     // database and insert every discovered devices.
