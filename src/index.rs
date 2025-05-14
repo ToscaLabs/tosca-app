@@ -9,6 +9,7 @@ use minijinja::context;
 use crate::device::Device;
 use crate::error::{error_with_info, Error};
 use crate::language::lang;
+use crate::template;
 use crate::AppState;
 
 pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>, Error> {
@@ -17,12 +18,12 @@ pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>,
     let rendered = error_with_info(
         template.render(context! {
             title => lang::INDEX_TITLE,
-            navbar => crate::template::NAVBAR,
+            navbar => template::NAVBAR,
             no_devices_message => lang::NO_DEVICES,
             discover_message => lang::DISCOVER_DEVICES,
             devices => vec![Device::new(DeviceKind::Light), Device::new(DeviceKind::Camera)],
             hazards => ALL_HAZARDS.iter().map(Hazard::data).collect::<Vec<_>>(),
-            footer => crate::template::footer(),
+            footer => template::footer(),
         }),
         lang::INDEX_RENDER_ERROR,
     )?;

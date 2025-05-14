@@ -8,6 +8,7 @@ pub(crate) mod lang {
     // Route errors.
     pub(crate) const INDEX_TEMPLATE_ERROR: &str = "Error in retrieving the `index` template";
     pub(crate) const INDEX_RENDER_ERROR: &str = "Error in rendering the `index` template";
+    pub(crate) const DISCOVERY_ERROR: &str = "Error in discovering devices";
     pub(crate) const POLICY_TEMPLATE_ERROR: &str = "Error in retrieving the `policy` template";
     pub(crate) const POLICY_RENDER_ERROR: &str = "Error in rendering the `policy` template";
 
@@ -46,6 +47,7 @@ pub(crate) mod lang {
     // Route errors.
     pub(crate) const INDEX_TEMPLATE_ERROR: &str = "Errore nel trovare il template `index`";
     pub(crate) const INDEX_RENDER_ERROR: &str = "Errore nel renderizzare il template `index`";
+    pub(crate) const DISCOVERY_ERROR: &str = "Errore nell'individuazione dei dispositivi";
     pub(crate) const POLICY_TEMPLATE_ERROR: &str = "Errore nel trovare il template `policy`";
     pub(crate) const POLICY_RENDER_ERROR: &str = "Errore nel renderizzare il template `policy`";
 
@@ -54,7 +56,7 @@ pub(crate) mod lang {
     pub(crate) const INDEX_TITLE: &str = "Dispositivi";
 
     // Devices messages.
-    pub(crate) const NO_DEVICES: &str = "Nessun dispositivo è stato trovato.";
+    pub(crate) const NO_DEVICES: &str = "Nessun dispositivo trovato.";
     pub(crate) const DISCOVER_DEVICES: &str = "Ricerca Dispositivi";
 
     // Logging errors.
