@@ -27,3 +27,12 @@ serde.features = ["derive"]
 tokio.version = "1.0"
 tokio.default-features = false
 tokio.features = ["rt-multi-thread"]
+
+tracing.version = "0.1"
+tracing.default-features = false
+tracing.optional = true
+
+[features]
+default = ["logging"]
+logging = ["tracing"]
+italian = []

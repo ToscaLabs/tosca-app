@@ -1,82 +1,30 @@
+mod ascot;
 mod device;
 mod error;
 mod index;
+mod language;
 mod policy;
+mod template;
 
+use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::sync::Arc;
-use std::time::Duration;
 
 use ascot_controller::controller::Controller;
-use ascot_controller::discovery::Discovery;
 
 use axum::{
     routing::{get, put},
     Router,
 };
 
-use chrono::Datelike;
-use chrono::Utc;
-
 use minijinja::Environment;
-
-use serde::Serialize;
 
 use tokio::sync::Mutex;
 
+use crate::ascot::create_controller;
 use crate::device::discover_devices;
 use crate::index::index;
+use crate::language::lang;
 use crate::policy::policy;
-
-const PROJECT: &str = "Ascot";
-const NAVBAR: &[NavBar] = &[
-    NavBar::new("/", "Devices"),
-    NavBar::new("policy.html", "Policy"),
-];
-const DEFAULT_DISCOVERY_DURATION: Duration = Duration::from_secs(1);
-
-macro_rules! builtin_templates {
-    ($(($name:expr, $template:expr)),+) => {
-        [
-        $(
-            (
-                $name,
-                include_str!(concat!(env!("CARGO_MANIFEST_DIR"),"/templates/", $template)),
-            )
-        ),+
-        ]
-    }
-}
-
-static TEMPLATES: &[(&str, &str)] = &builtin_templates![
-    ("css.custom", "custom.css"),
-    ("js.custom", "custom.js"),
-    ("layout", "layout.html"),
-    ("head", "head.html"),
-    ("navbar", "navbar.html"),
-    ("scripts", "scripts.html"),
-    ("footer", "footer.html"),
-    ("index", "index.html"),
-    ("devices", "devices.html"),
-    ("error", "error.html"),
-    ("modal-device", "modal-device.html"),
-    ("modal-hazards", "modal-hazards.html")
-];
-
-pub(crate) fn footer() -> String {
-    format!("Copyright © {} {PROJECT}", Utc::now().year())
-}
-
-#[derive(Serialize)]
-struct NavBar {
-    href: &'static str,
-    name: &'static str,
-}
-
-impl NavBar {
-    const fn new(href: &'static str, name: &'static str) -> Self {
-        Self { href, name }
-    }
-}
 
 #[derive(Clone)]
 struct AppState {
@@ -95,21 +43,19 @@ impl AppState {
 
 #[tokio::main]
 async fn main() {
-    // Create discovery searcher
-    let discovery = Discovery::new("ascot")
-        .timeout(DEFAULT_DISCOVERY_DURATION)
-        .disable_ipv6()
-        .disable_network_interface("docker0");
-
-    // Create Ascot controller
-    let controller = Controller::new(discovery);
+    // Initialize tracing subscriber with custom formatter
+    //let subscriber = Registry::default().with(fmt::Layer::default().event_format(LanguageEvent));
+    //tracing::subscriber::set_global_default(subscriber).expect("Failed to set subscriber");
 
     let mut env = Environment::new();
 
-    for (name, src) in TEMPLATES {
+    for (name, src) in template::TEMPLATES {
         env.add_template(name, src)
-            .expect("Internal error, built-in template");
+            .expect(lang::LOADING_TEMPLATE_ERROR);
     }
+
+    // Create controller.
+    let controller = create_controller();
 
     // Pass environment to handlers via state
     let app_state = AppState::new(env, controller);
@@ -121,14 +67,23 @@ async fn main() {
         .route("/privacy", get(policy))
         .with_state(app_state);
 
-    // The web app must always run on localhost!!!
-    //
-    // Only the port can be different in case of collisions.
-    let listener = tokio::net::TcpListener::bind("localhost:3000")
+    // Creates the web controller listener bind.
+    let listener_bind = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 8123);
+
+    // Creates listener.
+    let listener = tokio::net::TcpListener::bind(&listener_bind)
         .await
-        .unwrap();
+        .expect(lang::LISTENER_ERROR);
 
-    println!("listening on {}", listener.local_addr().unwrap());
+    // Prints listener bind and controller startup message.
+    #[cfg(feature = "logging")]
+    {
+        tracing::info!("{}: {listener_bind}", lang::CONTROLLER_ADDRESS_MESSAGE);
+        tracing::info!("{}", lang::CONTROLLER_STARTUP_MESSAGE);
+    }
 
-    axum::serve(listener, app).await.unwrap();
+    // Runs server.
+    axum::serve(listener, app)
+        .await
+        .expect(lang::SERVER_STARTUP_ERROR);
 }

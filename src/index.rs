@@ -8,7 +8,7 @@ use axum::response::Html;
 use minijinja::context;
 
 use crate::device::Device;
-use crate::{footer, AppState, NAVBAR};
+use crate::AppState;
 
 pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>, StatusCode> {
     let template = state.env.get_template("index").unwrap();
@@ -16,12 +16,12 @@ pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>,
     let rendered = template
         .render(context! {
             title => "Home",
-            navbar => NAVBAR,
+            navbar => crate::template::NAVBAR,
             no_devices_message => "No devices found.",
             discover_message => "Discover device",
             devices => vec![Device::new(DeviceKind::Light), Device::new(DeviceKind::Camera)],
             hazards => ALL_HAZARDS.iter().map(Hazard::data).collect::<Vec<_>>(),
-            footer => footer(),
+            footer => crate::template::footer(),
         })
         .unwrap();
 

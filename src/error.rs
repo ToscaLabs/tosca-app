@@ -1,16 +1,20 @@
-use serde::Serialize;
-
 use axum::{
     extract::Json,
     http::StatusCode,
     response::{IntoResponse, Response},
 };
 
+use serde::Serialize;
+
 pub(crate) fn error_with_info<T, E: std::error::Error>(
     res: Result<T, E>,
     description: &str,
 ) -> Result<T, Error> {
-    res.map_err(|e| Error::with_description_error(description, e))
+    res.map_err(|e| {
+        #[cfg(feature = "logging")]
+        tracing::error!("{e}");
+        Error::with_description_error(description, e)
+    })
 }
 
 #[derive(Serialize)]
