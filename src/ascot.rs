@@ -16,3 +16,7 @@ pub(crate) fn create_controller() -> Controller {
     // Create Ascot controller
     Controller::new(discovery)
 }
+
+// TODO: Define a function to map English hazards in Italian through hazard id.
+
+// TODO: Add a function to manage hazards and translate them in Italian

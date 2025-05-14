@@ -29,13 +29,13 @@ pub(crate) async fn discover_devices(State(state): State<AppState>) -> Result<Re
 
     // If some devices have been found, delete every old device from the
     // database and insert every discovered devices.
-    if !controller.devices().is_empty() {
+    /*if !controller.devices().is_empty() {
         // Clear the database
         //query_error(clear_database(&mut db), uri).await?;
 
         // Save devices into the database.
         //save_devices(db, devices_info, uri).await?;
-    }
+    }*/
 
     // Redirect to index
     Ok(Redirect::to("/"))
