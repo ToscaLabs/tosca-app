@@ -6,13 +6,15 @@ use axum::{
 
 use serde::Serialize;
 
+use crate::language::lang;
+
 pub(crate) fn error_with_info<T, E: std::error::Error>(
     res: Result<T, E>,
     description: &str,
 ) -> Result<T, Error> {
     res.map_err(|e| {
         #[cfg(feature = "logging")]
-        tracing::error!("{e}");
+        tracing::error!("{}:{e}", lang::REQUEST_ERROR);
         Error::with_description_error(description, e)
     })
 }
