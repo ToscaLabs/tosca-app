@@ -30,7 +30,6 @@ cargo build --features italian
 ## Tasks
 
 - [ ] Find and present a single device running in the same local network
-- [ ] Use `clap` to set the network parameters
 - [ ] Print route information on command line for logging purposes
 - [ ] Run the tool at startup and save the controller address in browser
 bookmarks

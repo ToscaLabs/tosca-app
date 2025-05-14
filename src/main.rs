@@ -85,8 +85,8 @@ async fn main() {
     // Define routes
     let app = Router::new()
         .route("/", get(index))
-        .route("/discovery", put(discover_devices))
         .route("/privacy", get(policy))
+        .route("/discovery", put(discover_devices))
         .with_state(app_state);
 
     // Creates the web controller listener bind.
@@ -100,6 +100,9 @@ async fn main() {
     // Prints listener bind and controller startup message.
     #[cfg(feature = "logging")]
     {
+        tracing::info!(r#": [GET, "/"]"#);
+        tracing::info!(r#"Privacy: GET, "/privacy"]"#);
+        tracing::info!(r#"Discovery: [PUT, "/discovery"]"#);
         tracing::info!("{}: {listener_bind}", lang::CONTROLLER_ADDRESS_MESSAGE);
         tracing::info!("{}", lang::CONTROLLER_STARTUP_MESSAGE);
     }
