@@ -18,6 +18,10 @@ chrono.version = "0.4"
 chrono.default-features = false
 chrono.features = ["clock"]
 
+clap.version = "4.5"
+clap.default-features = false
+clap.features = ["derive", "std"]
+
 minijinja.version = "2.10.0"
 minijinja.default-features = false
 minijinja.features = ["serde"]

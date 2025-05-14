@@ -18,6 +18,8 @@ use axum::{
     Router,
 };
 
+use clap::Parser;
+
 use minijinja::Environment;
 
 use tokio::sync::Mutex;
@@ -27,6 +29,20 @@ use crate::device::discover_devices;
 use crate::index::index;
 use crate::language::lang;
 use crate::policy::policy;
+
+#[derive(Parser)]
+#[command(version, about, long_about = "A web controller for Ascot devices.")]
+struct Cli {
+    /// Web controller `IPv4` address.
+    ///
+    /// Only `IPv4` addresses are accepted.
+    #[arg(long, default_value_t = Ipv4Addr::LOCALHOST)]
+    ip: Ipv4Addr,
+
+    /// Web controller port.
+    #[arg(long, default_value_t = 8123)]
+    port: u16,
+}
 
 #[derive(Clone)]
 struct AppState {
@@ -50,6 +66,9 @@ async fn main() {
     tracing::subscriber::set_global_default(logging::create_subscriber())
         .expect(lang::SUBSCRIBER_ERROR);
 
+    // Retrieve CLI arguments.
+    let cli = Cli::parse();
+
     let mut env = Environment::new();
 
     for (name, src) in template::TEMPLATES {
@@ -71,7 +90,7 @@ async fn main() {
         .with_state(app_state);
 
     // Creates the web controller listener bind.
-    let listener_bind = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 8123);
+    let listener_bind = SocketAddr::new(IpAddr::V4(cli.ip), cli.port);
 
     // Creates listener.
     let listener = tokio::net::TcpListener::bind(&listener_bind)
