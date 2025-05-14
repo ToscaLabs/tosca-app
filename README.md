@@ -15,6 +15,18 @@ memory optimizations run:
 cargo build --release
 ```
 
+To build without `logging` feature
+
+```console
+cargo build --no-default-features
+```
+
+To build with errors and messages in `Italian` language
+
+```console
+cargo build --features italian
+```
+
 ## Tasks
 
 - [ ] Find and present a single device running in the same local network

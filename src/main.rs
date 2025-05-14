@@ -3,6 +3,8 @@ mod device;
 mod error;
 mod index;
 mod language;
+#[cfg(feature = "logging")]
+mod logging;
 mod policy;
 mod template;
 
@@ -43,9 +45,10 @@ impl AppState {
 
 #[tokio::main]
 async fn main() {
-    // Initialize tracing subscriber with custom formatter
-    //let subscriber = Registry::default().with(fmt::Layer::default().event_format(LanguageEvent));
-    //tracing::subscriber::set_global_default(subscriber).expect("Failed to set subscriber");
+    // Initialize subscriber.
+    #[cfg(feature = "logging")]
+    tracing::subscriber::set_global_default(logging::create_subscriber())
+        .expect(lang::SUBSCRIBER_ERROR);
 
     let mut env = Environment::new();
 
