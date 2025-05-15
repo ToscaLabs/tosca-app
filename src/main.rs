@@ -4,9 +4,11 @@ mod device;
 mod database;
 mod error;
 mod index;
+// TODO
 mod language;
 #[cfg(feature = "logging")]
 mod logging;
+mod notifier;
 mod policy;
 mod request;
 mod template;

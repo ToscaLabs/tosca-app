@@ -1,5 +1,6 @@
 use ascot::parameters::ParameterKind;
 
+use ascot_controller::controller::Controller;
 use ascot_controller::parameters::Parameters;
 use ascot_controller::response::Response;
 
@@ -31,21 +32,43 @@ fn create_parameters(params: &[RequestParameters]) -> Parameters {
     for param in params {
         match param.kind {
             ParameterKind::Bool { .. } => {
-                let value = param.value.parse::<bool>().unwrap();
-                //parameters.bool(&params.name, value);
+                let value = param.value.parse().unwrap();
+                parameters.bool(&param.name, value);
             }
-            _ => todo!(),
+            ParameterKind::U8 { .. } => {
+                let value = param.value.parse().unwrap();
+                parameters.u8(&param.name, value);
+            }
+            ParameterKind::U16 { .. } => {
+                let value = param.value.parse().unwrap();
+                parameters.u16(&param.name, value);
+            }
+            ParameterKind::U32 { .. } => {
+                let value = param.value.parse().unwrap();
+                parameters.u32(&param.name, value);
+            }
+            ParameterKind::U64 { .. } | ParameterKind::RangeU64 { .. } => {
+                let value = param.value.parse().unwrap();
+                parameters.u64(&param.name, value);
+            }
+            ParameterKind::F32 { .. } => {
+                let value = param.value.parse().unwrap();
+                parameters.f32(&param.name, value);
+            }
+            ParameterKind::F64 { .. } | ParameterKind::RangeF64 { .. } => {
+                let value = param.value.parse().unwrap();
+                parameters.f64(&param.name, value);
+            }
+            ParameterKind::CharsSequence { .. } => {
+                parameters.characters_sequence(&param.name, param.value.clone());
+            }
+            _ => unreachable!(),
         }
     }
     parameters
 }
 
-pub(crate) async fn send_ok_request(
-    State(state): State<AppState>,
-    Json(request): Json<Request>,
-) -> Result<Redirect, Error> {
-    let mut controller = state.controller.lock().await;
-
+async fn send_request(controller: &Controller, request: Request) -> Response {
     // Find device sender
     let device_sender = controller.device(request.device_id).unwrap();
 
@@ -53,7 +76,7 @@ pub(crate) async fn send_ok_request(
     let request_sender = device_sender.request(&request.route).unwrap();
 
     // Obtain response
-    let response = if request.parameters.is_empty() {
+    if request.parameters.is_empty() {
         // Send request.
         request_sender.send().await.unwrap()
     } else {
@@ -61,10 +84,20 @@ pub(crate) async fn send_ok_request(
         let parameters = create_parameters(&request.parameters);
         // Send request with parameters.
         request_sender
-            .send_with_parameters(parameters)
+            .send_with_parameters(&parameters)
             .await
             .unwrap()
-    };
+    }
+}
+
+pub(crate) async fn send_ok_request(
+    State(state): State<AppState>,
+    Json(request): Json<Request>,
+) -> Result<Redirect, Error> {
+    let controller = state.controller.lock().await;
+
+    // Send a request and obtain a  response.
+    let response = send_request(&controller, request).await;
 
     // Check response kind.
     match response {
@@ -84,27 +117,10 @@ pub(crate) async fn send_serial_request(
     State(state): State<AppState>,
     Json(request): Json<Request>,
 ) -> Result<Redirect, Error> {
-    let mut controller = state.controller.lock().await;
+    let controller = state.controller.lock().await;
 
-    // Find device sender
-    let device_sender = controller.device(request.device_id).unwrap();
-
-    // Send request.
-    let request_sender = device_sender.request(&request.route).unwrap();
-
-    // Obtain response
-    let response = if request.parameters.is_empty() {
-        request_sender.send().await.unwrap()
-    } else {
-        // Create parameters.
-        let parameters = create_parameters(&request.parameters);
-
-        // Send request with parameters.
-        request_sender
-            .send_with_parameters(parameters)
-            .await
-            .unwrap()
-    };
+    // Send a request and obtain a  response.
+    let response = send_request(&controller, request).await;
 
     // Check response kind.
     match response {
