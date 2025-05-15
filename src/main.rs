@@ -4,10 +4,10 @@ mod device;
 mod database;
 mod error;
 mod index;
-// TODO
 mod language;
 #[cfg(feature = "logging")]
 mod logging;
+// TODO: Maintains the history of requests sent
 mod notifier;
 mod policy;
 mod request;
@@ -97,7 +97,7 @@ async fn main() {
         .route("/serial", put(send_serial_request))
         // TODO: Implement Info route
         //.route("/info", put(send_info_request))
-        // TODO: Use
+        // TODO: Implement Stream route
         // <a href="/stream/id">Stream</a>
         // To view the stream associated with this device.
         //.route("/stream/{id}", get(stream_request))
