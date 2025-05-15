@@ -30,6 +30,10 @@ serde.version = "1.0"
 serde.default-features = false
 serde.features = ["derive"]
 
+serde_json.version = "1"
+serde_json.default-features = false
+serde_json.features = ["alloc"]
+
 tokio.version = "1.0"
 tokio.default-features = false
 tokio.features = ["rt-multi-thread"]

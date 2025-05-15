@@ -8,6 +8,7 @@ mod language;
 #[cfg(feature = "logging")]
 mod logging;
 mod policy;
+mod request;
 mod template;
 
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
@@ -31,6 +32,7 @@ use crate::device::discover_devices;
 use crate::index::index;
 use crate::language::lang;
 use crate::policy::policy;
+use crate::request::{send_ok_request, send_serial_request};
 
 #[derive(Parser)]
 #[command(version, about, long_about = "A web controller for Ascot devices.")]
@@ -89,6 +91,14 @@ async fn main() {
         .route("/", get(index))
         .route("/privacy", get(policy))
         .route("/discovery", put(discover_devices))
+        .route("/ok", put(send_ok_request))
+        .route("/serial", put(send_serial_request))
+        // TODO: Implement Info route
+        //.route("/info", put(send_info_request))
+        // TODO: Use
+        // <a href="/stream/id">Stream</a>
+        // To view the stream associated with this device.
+        //.route("/stream/{id}", get(stream_request))
         .with_state(app_state);
 
     // Creates the web controller listener bind.
@@ -105,6 +115,8 @@ async fn main() {
         tracing::info!(r#": [GET, "/"]"#);
         tracing::info!(r#"Privacy: GET, "/privacy"]"#);
         tracing::info!(r#"Discovery: [PUT, "/discovery"]"#);
+        tracing::info!(r#"Ok request: [PUT, "/ok"]"#);
+        tracing::info!(r#"Serial request: [PUT, "/serial"]"#);
         tracing::info!("{}: {listener_bind}", lang::CONTROLLER_ADDRESS_MESSAGE);
         tracing::info!("{}", lang::CONTROLLER_STARTUP_MESSAGE);
     }

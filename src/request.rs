@@ -1,0 +1,121 @@
+use ascot::parameters::ParameterKind;
+
+use ascot_controller::parameters::Parameters;
+use ascot_controller::response::Response;
+
+use axum::extract::{Json, State};
+use axum::response::Redirect;
+
+use serde::Deserialize;
+use serde_json::Value;
+
+use crate::error::Error;
+use crate::AppState;
+
+#[derive(Deserialize)]
+pub(crate) struct RequestParameters {
+    kind: ParameterKind,
+    name: String,
+    value: String,
+}
+
+#[derive(Deserialize)]
+pub(crate) struct Request {
+    device_id: usize,
+    route: String,
+    parameters: Vec<RequestParameters>,
+}
+
+fn create_parameters(params: &[RequestParameters]) -> Parameters {
+    let mut parameters = Parameters::new();
+    for param in params {
+        match param.kind {
+            ParameterKind::Bool { .. } => {
+                let value = param.value.parse::<bool>().unwrap();
+                //parameters.bool(&params.name, value);
+            }
+            _ => todo!(),
+        }
+    }
+    parameters
+}
+
+pub(crate) async fn send_ok_request(
+    State(state): State<AppState>,
+    Json(request): Json<Request>,
+) -> Result<Redirect, Error> {
+    let mut controller = state.controller.lock().await;
+
+    // Find device sender
+    let device_sender = controller.device(request.device_id).unwrap();
+
+    // Send request.
+    let request_sender = device_sender.request(&request.route).unwrap();
+
+    // Obtain response
+    let response = if request.parameters.is_empty() {
+        // Send request.
+        request_sender.send().await.unwrap()
+    } else {
+        // Create parameters.
+        let parameters = create_parameters(&request.parameters);
+        // Send request with parameters.
+        request_sender
+            .send_with_parameters(parameters)
+            .await
+            .unwrap()
+    };
+
+    // Check response kind.
+    match response {
+        // TODO: Add response to notifier
+        Response::OkBody(response) => {
+            response.parse_body().await.unwrap();
+        }
+        Response::Skipped => todo!("Add skipped response to notifier"),
+        _ => todo!("This is an error, add to notifier"),
+    }
+
+    // Redirect to index
+    Ok(Redirect::to("/"))
+}
+
+pub(crate) async fn send_serial_request(
+    State(state): State<AppState>,
+    Json(request): Json<Request>,
+) -> Result<Redirect, Error> {
+    let mut controller = state.controller.lock().await;
+
+    // Find device sender
+    let device_sender = controller.device(request.device_id).unwrap();
+
+    // Send request.
+    let request_sender = device_sender.request(&request.route).unwrap();
+
+    // Obtain response
+    let response = if request.parameters.is_empty() {
+        request_sender.send().await.unwrap()
+    } else {
+        // Create parameters.
+        let parameters = create_parameters(&request.parameters);
+
+        // Send request with parameters.
+        request_sender
+            .send_with_parameters(parameters)
+            .await
+            .unwrap()
+    };
+
+    // Check response kind.
+    match response {
+        // TODO: Add response to notifier
+        Response::SerialBody(response) => {
+            let serial_response = response.parse_body::<Value>().await.unwrap();
+        }
+        Response::Skipped => todo!("Add skipped response to notifier"),
+        _ => todo!("This is an error, add to notifier"),
+    }
+
+    // Redirect to index
+    Ok(Redirect::to("/"))
+}
