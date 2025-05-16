@@ -13,14 +13,16 @@ use serde_json::Value;
 use crate::error::Error;
 use crate::AppState;
 
-#[derive(Deserialize)]
+// TODO: Remove Debug trait
+
+#[derive(Debug, Deserialize)]
 pub(crate) struct RequestParameters {
     kind: ParameterKind,
     name: String,
     value: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 pub(crate) struct Request {
     device_id: usize,
     route: String,
@@ -94,7 +96,8 @@ pub(crate) async fn send_ok_request(
     State(state): State<AppState>,
     Json(request): Json<Request>,
 ) -> Result<Redirect, Error> {
-    let controller = state.controller.lock().await;
+    println!("{:?}", request);
+    /*let controller = state.controller.lock().await;
 
     // Send a request and obtain a  response.
     let response = send_request(&controller, request).await;
@@ -107,7 +110,7 @@ pub(crate) async fn send_ok_request(
         }
         Response::Skipped => todo!("Add skipped response to response log"),
         _ => todo!("This is an error, add to response log"),
-    }
+    }*/
 
     // Redirect to index
     Ok(Redirect::to("/"))
@@ -117,7 +120,9 @@ pub(crate) async fn send_serial_request(
     State(state): State<AppState>,
     Json(request): Json<Request>,
 ) -> Result<Redirect, Error> {
-    let controller = state.controller.lock().await;
+    println!("{:?}", request);
+
+    /*let controller = state.controller.lock().await;
 
     // Send a request and obtain a  response.
     let response = send_request(&controller, request).await;
@@ -130,7 +135,7 @@ pub(crate) async fn send_serial_request(
         }
         Response::Skipped => todo!("Add skipped response to response log"),
         _ => todo!("This is an error, add to response log"),
-    }
+    }*/
 
     // Redirect to index
     Ok(Redirect::to("/"))
