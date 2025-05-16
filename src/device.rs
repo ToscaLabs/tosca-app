@@ -8,6 +8,7 @@ use crate::AppState;
 #[cfg(feature = "fake-devices")]
 pub(crate) mod fake {
     use std::collections::{HashMap, HashSet};
+    use std::fs::File;
 
     use ascot::device::{DeviceEnvironment, DeviceKind};
     use ascot::hazards::{Hazard, Hazards};
@@ -143,6 +144,16 @@ pub(crate) mod fake {
         devices.add(create_unknown());
 
         devices
+    }
+
+    pub(crate) fn output_devices_on_file() {
+        // Retrieve devices.
+        let devices = create_fake_devices();
+        // Create or open the file to write to
+        let file = File::create("devices.json").unwrap();
+
+        // Write the JSON data in pretty format to the file
+        serde_json::to_writer_pretty(file, &devices).unwrap();
     }
 }
 

@@ -105,6 +105,10 @@ async fn main() {
     // Retrieve CLI arguments.
     let cli = Cli::parse();
 
+    #[cfg(feature = "fake-devices")]
+    crate::device::fake::output_devices_on_file();
+    panic!("here");
+
     let mut env = Environment::new();
 
     for (name, src) in TEMPLATES {
