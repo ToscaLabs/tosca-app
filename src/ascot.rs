@@ -1,5 +1,7 @@
 use std::time::Duration;
 
+use ascot::hazards::{Hazard, HazardData, ALL_HAZARDS};
+
 use ascot_controller::controller::Controller;
 use ascot_controller::discovery::Discovery;
 
@@ -15,6 +17,10 @@ pub(crate) fn create_controller() -> Controller {
 
     // Create Ascot controller
     Controller::new(discovery)
+}
+
+pub(crate) fn retrieve_all_hazards() -> Vec<HazardData> {
+    ALL_HAZARDS.iter().map(Hazard::data).collect()
 }
 
 // TODO: Define a function to map English hazards in Italian through hazard id.
