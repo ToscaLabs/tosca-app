@@ -23,8 +23,6 @@ clap.default-features = false
 clap.features = ["derive", "std"]
 
 minijinja.version = "2.10.0"
-minijinja.default-features = false
-minijinja.features = ["serde"]
 
 serde.version = "1.0"
 serde.default-features = false
@@ -44,7 +42,7 @@ tracing.optional = true
 
 tracing-subscriber.version = "0.3"
 tracing-subscriber.default-features = false
-tracing-subscriber.features = ["fmt", "json"]
+tracing-subscriber.features = ["fmt", "json", "ansi"]
 tracing-subscriber.optional = true
 
 [features]
