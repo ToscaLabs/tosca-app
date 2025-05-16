@@ -7,10 +7,10 @@ mod index;
 mod language;
 #[cfg(feature = "logging")]
 mod logging;
-// TODO: Maintains the history of requests sent
-mod notifier;
+// TODO: Maintains the response registers and other methods
 mod policy;
 mod request;
+mod response;
 mod template;
 
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
@@ -35,6 +35,7 @@ use crate::index::index;
 use crate::language::lang;
 use crate::policy::policy;
 use crate::request::{send_ok_request, send_serial_request};
+use crate::response::response_log;
 
 #[derive(Parser)]
 #[command(version, about, long_about = "A web controller for Ascot devices.")]
@@ -92,6 +93,7 @@ async fn main() {
     let app = Router::new()
         .route("/", get(index))
         .route("/privacy", get(policy))
+        .route("/response-log", get(response_log))
         .route("/discovery", put(discover_devices))
         .route("/ok", put(send_ok_request))
         .route("/serial", put(send_serial_request))
