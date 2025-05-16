@@ -18,7 +18,10 @@ pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>,
     let all_hazards = retrieve_all_hazards();
 
     #[cfg(not(feature = "fake-devices"))]
-    let devices = controller.devices();
+    {
+        let devices = controller.devices();
+        println!("{}", serde_json::to_string(&devices));
+    }
 
     #[cfg(feature = "fake-devices")]
     let devices = crate::device::fake::create_fake_devices();
