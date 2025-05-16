@@ -1,14 +1,15 @@
 mod ascot;
 mod device;
-// TODO
+// TODO: Implement database
 mod database;
 mod error;
 mod index;
 mod language;
 #[cfg(feature = "logging")]
 mod logging;
-// TODO: Maintains the response registers and other methods
+// TODO: Implement policy
 mod policy;
+// TODO: Maintains the response log and other methods
 mod request;
 mod response;
 mod template;
@@ -116,8 +117,9 @@ async fn main() {
     // Prints listener bind and controller startup message.
     #[cfg(feature = "logging")]
     {
-        tracing::info!(r#": [GET, "/"]"#);
-        tracing::info!(r#"Privacy: GET, "/privacy"]"#);
+        tracing::info!(r#"Home: [GET, "/"]"#);
+        tracing::info!(r#"Policy: GET, "/privacy"]"#);
+        tracing::info!(r#"Response Log: GET, "/response-log"]"#);
         tracing::info!(r#"Discovery: [PUT, "/discovery"]"#);
         tracing::info!(r#"Ok request: [PUT, "/ok"]"#);
         tracing::info!(r#"Serial request: [PUT, "/serial"]"#);
