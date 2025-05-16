@@ -1,10 +1,15 @@
 {% for device in devices %}
-<div id="modal-{{ device.kind }}-{{ loop.index0 }}" class="modal">
+<!-- THE ID IS NECESSARY TO CALL THE RIGHT MODAL -->
+<div id="modal-{{ device.description.kind }}-{{ loop.index0 }}" class="modal">
   <div class="modal-background"></div>
 
   <div class="modal-content">
     <div class="box">
-      <p>{{ device.kind}} Info</p>
+        <div class="content">
+          <h1>{{ device.description.kind }}</h1>
+
+          <p>Main Route: {{ device.description.main_route }}</p>
+        </div>
     </div>
   </div>
 

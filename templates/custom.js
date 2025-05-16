@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
   // Add a click event on each of them
-  $navbarBurgers.forEach(el => {
+  $navbarBurgers.forEach( el => {
     el.addEventListener('click', () => {
 
       // Get the target from the "data-target" attribute
@@ -19,9 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     });
   });
+
 });
 
-// Load modal code.
 document.addEventListener('DOMContentLoaded', () => {
   // Functions to open and close a modal
   function openModal($el) {
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Add a click event on buttons to open a specific modal
-  (document.querySelectorAll('.info-icon, .hazards') || []).forEach(($trigger) => {
+  (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
     const modal = $trigger.dataset.target;
     const $target = document.getElementById(modal);
 
@@ -64,10 +64,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
-
-{% if index.devices | length > 0 %}
-// Send form data to a server.
-function sendForm(id) {
-  document.getElementById(id).click();
-}
-{% endif %}
