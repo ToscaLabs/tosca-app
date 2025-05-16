@@ -9,7 +9,7 @@ use minijinja::context;
 use crate::device::Device;
 use crate::error::{error_with_info, Error};
 use crate::language::lang;
-use crate::template;
+use crate::layout;
 use crate::AppState;
 
 pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>, Error> {
@@ -26,12 +26,12 @@ pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>,
     let rendered = error_with_info(
         template.render(context! {
             title => lang::INDEX_TITLE,
-            navbar => template::NAVBAR,
+            navbar => layout::NAVBAR,
             no_devices_message => lang::NO_DEVICES,
             discover_message => lang::DISCOVER_DEVICES,
             devices => devices,
             hazards => all_hazards,
-            footer => template::footer(),
+            footer => layout::footer(),
         }),
         lang::INDEX_RENDER_ERROR,
     )?;

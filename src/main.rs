@@ -5,14 +5,14 @@ mod database;
 mod error;
 mod index;
 mod language;
+mod layout;
 #[cfg(feature = "logging")]
 mod logging;
 // TODO: Implement policy
 mod policy;
-// TODO: Maintains the response log and other methods
 mod request;
+// TODO: Maintains the response log and other methods
 mod response;
-mod template;
 
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::sync::Arc;
@@ -37,6 +37,34 @@ use crate::language::lang;
 use crate::policy::policy;
 use crate::request::{send_ok_request, send_serial_request};
 use crate::response::response_log;
+
+macro_rules! builtin_templates {
+    ($(($name:expr, $template:expr)),+) => {
+        [
+        $(
+            (
+                $name,
+                include_str!(concat!(env!("CARGO_MANIFEST_DIR"),"/templates/", $template)),
+            )
+        ),+
+        ]
+    }
+}
+
+static TEMPLATES: &[(&str, &str)] = &builtin_templates![
+    ("css.custom", "custom.css"),
+    ("js.custom", "custom.js"),
+    ("layout", "layout.html"),
+    ("head", "head.html"),
+    ("navbar", "navbar.html"),
+    ("scripts", "scripts.html"),
+    ("footer", "footer.html"),
+    ("index", "index.html"),
+    ("devices", "devices.html"),
+    ("error", "error.html"),
+    ("modal-device", "modal-device.html"),
+    ("modal-hazards", "modal-hazards.html")
+];
 
 #[derive(Parser)]
 #[command(version, about, long_about = "A web controller for Ascot devices.")]
@@ -79,7 +107,7 @@ async fn main() {
 
     let mut env = Environment::new();
 
-    for (name, src) in template::TEMPLATES {
+    for (name, src) in TEMPLATES {
         env.add_template(name, src)
             .expect(lang::LOADING_TEMPLATE_ERROR);
     }

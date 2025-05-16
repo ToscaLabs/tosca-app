@@ -5,7 +5,7 @@ use minijinja::context;
 
 use crate::error::{error_with_info, Error};
 use crate::language::lang;
-use crate::template;
+use crate::layout;
 use crate::AppState;
 
 pub(crate) async fn policy(State(state): State<AppState>) -> Result<Html<String>, Error> {
@@ -17,8 +17,8 @@ pub(crate) async fn policy(State(state): State<AppState>) -> Result<Html<String>
     let rendered = error_with_info(
         template.render(context! {
             title => lang::POLICY_TITLE,
-            navbar => template::NAVBAR,
-            footer => template::footer(),
+            navbar => layout::NAVBAR,
+            footer => layout::footer(),
         }),
         lang::POLICY_RENDER_ERROR,
     )?;
