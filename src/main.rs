@@ -34,7 +34,7 @@ use crate::ascot::create_controller;
 use crate::device::discover_devices;
 use crate::index::index;
 use crate::language::lang;
-use crate::policy::policy;
+use crate::policy::privacy;
 use crate::request::{send_ok_request, send_serial_request};
 use crate::response::response_log;
 
@@ -60,10 +60,11 @@ static TEMPLATES: &[(&str, &str)] = &builtin_templates![
     ("scripts", "scripts.html"),
     ("footer", "footer.html"),
     ("index", "index.html"),
-    ("devices", "devices.html"),
+    ("create-devices", "create-devices.html"),
+    ("modal-devices", "modal-devices.html"),
+    ("modal-hazards", "modal-hazards.html"),
     ("error", "error.html"),
-    ("modal-device", "modal-device.html"),
-    ("modal-hazards", "modal-hazards.html")
+    ("privacy", "privacy.html")
 ];
 
 #[derive(Parser)]
@@ -76,7 +77,7 @@ struct Cli {
     ip: Ipv4Addr,
 
     /// Web controller port.
-    #[arg(long, default_value_t = 8123)]
+    #[arg(long, default_value_t = 3000)]
     port: u16,
 }
 
@@ -107,7 +108,6 @@ async fn main() {
 
     #[cfg(feature = "fake-devices")]
     crate::device::fake::output_devices_on_file();
-    panic!("here");
 
     let mut env = Environment::new();
 
@@ -125,7 +125,7 @@ async fn main() {
     // Define routes
     let app = Router::new()
         .route("/", get(index))
-        .route("/privacy", get(policy))
+        .route("/privacy", get(privacy))
         .route("/response-log", get(response_log))
         .route("/discovery", put(discover_devices))
         .route("/ok", put(send_ok_request))

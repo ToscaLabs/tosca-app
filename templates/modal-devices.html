@@ -1,8 +1,6 @@
 {% for device in devices %}
-<!-- THE ID IS NECESSARY TO CALL THE RIGHT MODAL -->
 <div id="modal-{{ device.description.kind }}-{{ loop.index0 }}" class="modal">
   <div class="modal-background"></div>
-
   <div class="modal-content">
     <div class="box">
         <div class="content">
@@ -12,7 +10,6 @@
         </div>
     </div>
   </div>
-
   <button class="modal-close is-large" aria-label="close"></button>
 </div>
 {% endfor %}

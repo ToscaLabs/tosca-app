@@ -4,10 +4,8 @@ use chrono::Utc;
 use serde::Serialize;
 
 // Navbar items.
-pub(crate) const NAVBAR: &[NavBar] = &[
-    NavBar::new("/", "Devices"),
-    NavBar::new("policy.html", "Policy"),
-];
+pub(crate) const NAVBAR: &[NavBar] =
+    &[NavBar::new("/", "Home"), NavBar::new("/privacy", "Privacy")];
 
 pub(crate) fn footer() -> String {
     format!("Copyright © {} ascot", Utc::now().year())
