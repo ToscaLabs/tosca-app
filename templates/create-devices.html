@@ -4,8 +4,8 @@
         <div class="card">
             <header class="card-header has-background-success is-shadowless">
                 <p class="card-header-title is-centered has-text-centered is-size-5-mobile">
-                    <font class="is-size-6-mobile">{{ device.description.kind }}</font>
-                    <button class="info-icon" data-target="modal-{{ device.description.kind }}-{{ loop.index0 }}">
+                    <font class="is-size-6-mobile">{{ device.description.kind }} Device</font>
+                    <button class="info-icon js-modal-trigger" data-target="modal-{{ device.description.kind }}-{{ loop.index0 }}">
                         <span class="icon has-text-white-bis is-size-6-mobile">
                             <i class="fas fa-info-circle" aria-hidden="true"></i>
                         </span>
@@ -17,7 +17,7 @@
                     <header class="card-header has-background-success is-shadowless">
                         <p class="card-header-title is-centered has-text-centered is-size-5-mobile">
                             <font class="is-size-6-mobile">{{ device.description.kind }}</font>
-                            <button class="info-icon" data-target="modal-{{ device.description.kind }}-{{ loop.index0 }}">
+                            <button class="info-icon js-modal-trigger" data-target="modal-{{ device.description.kind }}-{{ loop.index0 }}">
                                 <span class="icon has-text-white-bis is-size-6-mobile">
                                     <i class="fas fa-info-circle" aria-hidden="true"></i>
                                 </span>
