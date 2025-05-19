@@ -6,11 +6,9 @@ edition = "2024"
 [dependencies]
 ascot.version = "0.1.0"
 ascot.git = "https://github.com/SoftengPoliTo/ascot"
-ascot.branch = "convert-to-workspace"
 
 ascot-controller.version = "0.1.0"
 ascot-controller.git = "https://github.com/SoftengPoliTo/ascot"
-ascot-controller.branch = "convert-to-workspace"
 
 axum.version = "0.8.0"
 axum.default-features = false
@@ -37,6 +35,10 @@ serde_json.features = ["alloc"]
 tokio.version = "1.0"
 tokio.default-features = false
 tokio.features = ["rt-multi-thread"]
+
+tower-http.version = "0.6.1"
+tower-http.default-features = false
+tower-http.features = ["fs", "trace"]
 
 tracing.version = "0.1"
 tracing.default-features = false

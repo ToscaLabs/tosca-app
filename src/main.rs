@@ -8,8 +8,8 @@ mod language;
 mod layout;
 #[cfg(feature = "logging")]
 mod logging;
-// TODO: Implement policy
-mod policy;
+// TODO: Implement privacy rules
+mod privacy;
 mod request;
 // TODO: Maintains the response log and other methods
 mod response;
@@ -20,6 +20,7 @@ use std::sync::Arc;
 use ascot_controller::controller::Controller;
 
 use axum::{
+    handler::HandlerWithoutStateExt,
     routing::{get, put},
     Router,
 };
@@ -30,11 +31,14 @@ use minijinja::Environment;
 
 use tokio::sync::Mutex;
 
+use tower_http::services::ServeDir;
+
 use crate::ascot::create_controller;
 use crate::device::discover_devices;
+use crate::error::missing_assets;
 use crate::index::index;
 use crate::language::lang;
-use crate::policy::privacy;
+use crate::privacy::privacy;
 use crate::request::{send_ok_request, send_serial_request};
 use crate::response::response_log;
 
@@ -52,12 +56,9 @@ macro_rules! builtin_templates {
 }
 
 static TEMPLATES: &[(&str, &str)] = &builtin_templates![
-    ("css.custom", "custom.css"),
-    ("js.custom", "custom.js"),
     ("layout", "layout.html"),
     ("head", "head.html"),
     ("navbar", "navbar.html"),
-    ("scripts", "scripts.html"),
     ("footer", "footer.html"),
     ("index", "index.html"),
     ("create-devices", "create-devices.html"),
@@ -122,6 +123,9 @@ async fn main() {
     // Pass environment to handlers via state
     let app_state = AppState::new(env, controller);
 
+    // Loads the directory containing assets such as `CSS` or `JS` files.
+    let serve_dir = ServeDir::new("assets").not_found_service(missing_assets.into_service());
+
     // Define routes
     let app = Router::new()
         .route("/", get(index))
@@ -136,6 +140,8 @@ async fn main() {
         // <a href="/stream/id">Stream</a>
         // To view the stream associated with this device.
         //.route("/stream/{id}", get(stream_request))
+        .nest_service("/assets", serve_dir.clone())
+        .fallback_service(serve_dir)
         .with_state(app_state);
 
     // Creates the web controller listener bind.
