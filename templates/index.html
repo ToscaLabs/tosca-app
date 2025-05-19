@@ -1,16 +1,18 @@
 {% extends "layout" %}
 {% block page %}
-    <div class="container mt-5 mb-3 px-3">
+    {% if devices | length == 0 %}
+        <h2 class="subtitle is-2 is-size-3-mobile has-text-black has-text-centered mt-5 px-2">{{ no_devices_message }}</h2>
+    {% else %}
         {% include "create-devices" %}
+    {% endif %}
 
-        <!-- BUTTON TO DISCOVER NEW DEVICES -->
-        <form class="field is-centered has-text-centered pt-4 mt-4" method="post">
-            <input type="hidden" name="_method" value="put">
-            <p class="control">
-                <button class="button is-large is-size-5-mobile is-responsive is-success" type="submit">{{ discover_message }}</button>
-            </p>
-        </form>
-    </div>
+    <!-- BUTTON TO DISCOVER NEW DEVICES -->
+    <form class="field is-centered has-text-centered pt-4 mt-4" method="post">
+        <input type="hidden" name="_method" value="put">
+        <p class="control">
+            <button class="button has-background-success is-large is-size-5-mobile is-responsive is-success" type="submit">{{ discover_message }}</button>
+        </p>
+    </form>
 
     {% include "modal-devices" %}
 

@@ -2,12 +2,14 @@
 <div id="modal-{{ device.description.kind }}-{{ loop.index0 }}" class="modal">
   <div class="modal-background"></div>
   <div class="modal-card">
-      <header class="modal-card-head">
+      <header class="modal-card-head is-size-6-mobile">
           <p class="modal-card-title">{{ device.description.kind }} Device</p>
           <button class="delete" aria-label="close"></button>
       </header>
       <section class="modal-card-body">
-          <p>Main Route: {{ device.description.main_route }}</p>
+          <p>
+              <strong>Main Route</strong> <em>~&gt;</em> <code>{{ device.description.main_route }}</code>
+          </p>
       </section>
   </div>
 </div>

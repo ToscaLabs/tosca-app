@@ -25,7 +25,7 @@ pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>,
 
     let rendered = error_with_info(
         template.render(context! {
-            title => lang::INDEX_TITLE,
+            title => "Demo",
             navbar => layout::NAVBAR,
             no_devices_message => lang::NO_DEVICES,
             discover_message => lang::DISCOVER_DEVICES,

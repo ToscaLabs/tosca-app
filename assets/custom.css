@@ -1,3 +1,38 @@
-.no-wrap {
-    white-space: nowrap;
+html {
+  width: 100%;
+  min-height: 100%;
+}
+
+/* Menu colors */
+
+.navbar-menu i {
+  color: black;
+}
+
+.navbar-item {
+  color: black;
+}
+
+.navbar-item:link, .navbar-item:active, .navbar-item:visited {
+  background-color: transparent;
+}
+
+.navbar-item:hover {
+  background-color: white;
+}
+
+/* Smartphone */
+
+@media (hover:none) {
+  .navbar-item:hover {
+    background-color: transparent;
+  }
+}
+
+.navbar-burger:hover {
+  background: none;
+}
+
+.navbar-burger span {
+  color: black;
 }

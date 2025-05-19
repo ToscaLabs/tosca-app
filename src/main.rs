@@ -78,7 +78,7 @@ struct Cli {
     ip: Ipv4Addr,
 
     /// Web controller port.
-    #[arg(long, default_value_t = 3000)]
+    #[arg(long, default_value_t = 8123)]
     port: u16,
 }
 
