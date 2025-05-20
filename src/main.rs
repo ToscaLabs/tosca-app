@@ -31,8 +31,6 @@ use clap::Parser;
 use minijinja::value::ViaDeserialize;
 use minijinja::Environment;
 
-use serde::Deserialize;
-
 use tokio::sync::Mutex;
 
 use tower_http::services::ServeDir;
@@ -44,7 +42,7 @@ use crate::language::lang;
 use crate::privacy::privacy;
 use crate::request::{send_ok_request, send_serial_request};
 use crate::response::response_log;
-use crate::utils::create_controller;
+use crate::utils::{add_functions_to_env, create_controller};
 
 macro_rules! builtin_templates {
     ($(($name:expr, $template:expr)),+) => {
@@ -101,14 +99,6 @@ impl AppState {
     }
 }
 
-fn hazard_id(hazard: ViaDeserialize<Hazard>) -> u16 {
-    hazard.data().id
-}
-
-fn hazard_category(hazard: ViaDeserialize<Hazard>) -> String {
-    hazard.data().category_name.into()
-}
-
 #[tokio::main]
 async fn main() {
     // Initialize subscriber.
@@ -129,8 +119,8 @@ async fn main() {
             .expect(lang::LOADING_TEMPLATE_ERROR);
     }
 
-    env.add_function("hazard_id", hazard_id);
-    env.add_function("hazard_category", hazard_category);
+    // Add global functions to minijinja environment.
+    add_functions_to_env(&mut env);
 
     // Create controller.
     let controller = create_controller();
