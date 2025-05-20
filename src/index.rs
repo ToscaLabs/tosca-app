@@ -3,10 +3,10 @@ use axum::response::Html;
 
 use minijinja::context;
 
-use crate::ascot::retrieve_all_hazards;
 use crate::error::{error_with_info, Error};
 use crate::language::lang;
 use crate::layout;
+use crate::utils::retrieve_all_hazards;
 use crate::AppState;
 
 pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>, Error> {
@@ -25,7 +25,7 @@ pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>,
 
     let rendered = error_with_info(
         template.render(context! {
-            title => "Demo",
+            title => "Controller",
             navbar => layout::NAVBAR,
             no_devices_message => lang::NO_DEVICES,
             discover_message => lang::DISCOVER_DEVICES,

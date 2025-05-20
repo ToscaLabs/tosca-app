@@ -5,12 +5,12 @@ html {
 
 /* Menu colors */
 
-.navbar-menu i {
+/*.navbar-menu i {
   color: black;
-}
+}*/
 
 .navbar-item {
-  color: black;
+  color: white;
 }
 
 .navbar-item:link, .navbar-item:active, .navbar-item:visited {
@@ -18,7 +18,7 @@ html {
 }
 
 .navbar-item:hover {
-  background-color: white;
+  background-color: rgba(253, 248, 248, 0);
 }
 
 /* Smartphone */
@@ -34,5 +34,5 @@ html {
 }
 
 .navbar-burger span {
-  color: black;
+  color: white;
 }

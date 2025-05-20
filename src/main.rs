@@ -1,5 +1,5 @@
-mod ascot;
 mod device;
+mod utils;
 // TODO: Implement database
 mod database;
 mod error;
@@ -17,6 +17,7 @@ mod response;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::sync::Arc;
 
+use ascot::hazards::{Hazard, HazardData};
 use ascot_controller::controller::Controller;
 
 use axum::{
@@ -27,13 +28,15 @@ use axum::{
 
 use clap::Parser;
 
+use minijinja::value::ViaDeserialize;
 use minijinja::Environment;
+
+use serde::Deserialize;
 
 use tokio::sync::Mutex;
 
 use tower_http::services::ServeDir;
 
-use crate::ascot::create_controller;
 use crate::device::discover_devices;
 use crate::error::missing_assets;
 use crate::index::index;
@@ -41,6 +44,7 @@ use crate::language::lang;
 use crate::privacy::privacy;
 use crate::request::{send_ok_request, send_serial_request};
 use crate::response::response_log;
+use crate::utils::create_controller;
 
 macro_rules! builtin_templates {
     ($(($name:expr, $template:expr)),+) => {
@@ -97,6 +101,14 @@ impl AppState {
     }
 }
 
+fn hazard_id(hazard: ViaDeserialize<Hazard>) -> u16 {
+    hazard.data().id
+}
+
+fn hazard_category(hazard: ViaDeserialize<Hazard>) -> String {
+    hazard.data().category_name.into()
+}
+
 #[tokio::main]
 async fn main() {
     // Initialize subscriber.
@@ -116,6 +128,9 @@ async fn main() {
         env.add_template(name, src)
             .expect(lang::LOADING_TEMPLATE_ERROR);
     }
+
+    env.add_function("hazard_id", hazard_id);
+    env.add_function("hazard_category", hazard_category);
 
     // Create controller.
     let controller = create_controller();

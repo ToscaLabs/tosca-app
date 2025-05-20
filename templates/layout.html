@@ -3,11 +3,7 @@
     {% include "head" %}
     <body>
         {% include "navbar" %}
-        <section class="section is-fullheight">
-            <div class="container has-text-centered">
-                {% block page %}{% endblock %}
-            </div>
-        </section>
+        {% block page %}{% endblock %}
         {% include "footer" %}
 
         <!-- Custom JS -->
