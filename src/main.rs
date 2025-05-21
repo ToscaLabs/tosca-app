@@ -67,7 +67,9 @@ static TEMPLATES: &[(&str, &str)] = &builtin_templates![
     ("modal-devices", "modal-devices.html"),
     ("modal-hazards", "modal-hazards.html"),
     ("error", "error.html"),
-    ("privacy", "privacy.html")
+    ("privacy", "privacy.html"),
+    ("light", "light.html"),
+    ("unknown", "unknown.html")
 ];
 
 #[derive(Parser)]

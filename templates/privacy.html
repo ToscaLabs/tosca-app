@@ -1,4 +1,44 @@
 {% extends "layout" %}
 {% block page %}
-  TODO
+<section class="section">
+        <form class=" container mt-5" method="post">
+            <h1 class="title">Categories</h1>
+            <div class="content">
+                <p class="subtitle">
+                    Enables and disables requests associated with determined privacy categories
+                    by clicking on its name.
+                </p>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <label class="checkbox">
+                        <input type="checkbox" class="is-hidden">
+                         <span class="tag is-medium is-danger">Safety</span>
+                    </label>
+                </div>
+            </div>
+            <h1 class="title mt-6">Hazards</h1>
+            <div class="content">
+                <p class="subtitle">
+                    Enables and disables specific hazard by clicking on its name
+                </p>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <label class="checkbox">
+                        <input type="checkbox" class="is-hidden">
+                         <span class="tag is-medium is-danger">Fire Hazard</span>
+                    </label>
+                </div>
+            </div>
+            <div class="field is-grouped mt-6">
+                <div class="control">
+                    <button class="button is-success-15">Submit</button>
+                </div>
+                <div class="control">
+                    <button class="button is-success is-light">Reset</button>
+                </div>
+            </div>
+        </form>
+</section>
 {% endblock %}
