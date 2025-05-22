@@ -1,35 +1,67 @@
+<p class="mb-4">TODO: Implement Functional State for Unknown</p>
+
 {% for request in device.requests %}
 {% set route = device.requests[request] %}
 <div class="card">
-    <header class="card-header has-background-success-35">
+    <header class="card-header has-background-success-50">
         <p class="card-header-title is-centered has-text-centered is-size-5-mobile">
             <font class="is-size-6-mobile">{{ request }}</font>
-            <button class="info-icon js-modal-trigger pl-1 pt-0" data-target="modal-{{ device.description.kind }}-{{ device_index }}-{{ loop.index0 }}">
+            <button class="js-modal-trigger pl-1 pt-0" data-target="modal-{{ device.description.kind }}-{{ device_index }}-{{ loop.index0 }}">
                 <span class="icon is-size-6-mobile">
-                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                    <i class="fas fa-info-circle"></i>
                 </span>
             </button>
         </p>
     </header>
-    <div class="card-content has-text-centered">
-        <div class="columns is-multiline is-mobile is-centered">
+    <div class="card-content">
+
+        <div class="field is-grouped is-grouped-centered is-grouped-multiline">
         {% for hazard in route.hazards %}
         {% set category = hazard_category(hazard) %}
-           <div class="column">
-               <button class="js-modal-trigger" data-target="hazard-{{ hazard_id(hazard) }}">
-                   {% if category == "Safety" %}
-                   <span class="tag is-medium is-danger">
-                   {% elif category == "Financial" %}
-                   <span class="tag is-medium is-warning">
-                   {% else %}
-                   <span class="tag is-medium is-info">
-                   {% endif %}
-                   {{ hazard_name(hazard) }}
-                   </span>
-               </button>
-           </div>
+            <div class="control">
+                <div class="tags are-medium">
+                   <button class="js-modal-trigger" data-target="hazard-{{ hazard_id(hazard) }}">
+                       {% if category == "Safety" %}
+                       <span class="tag is-hoverable is-danger">
+                       {% elif category == "Financial" %}
+                       <span class="tag is-hoverable is-warning">
+                       {% else %}
+                       <span class="tag is-hoverable is-info">
+                       {% endif %}
+                       {{ hazard_name(hazard) }}
+                       </span>
+                   </button>
+                </div>
+            </div>
         {% endfor %}
         </div>
+
+        {% if route.parameters_data | length == 0 %}
+            {% if route.response_kind == "Ok" %}
+            <form class="container mt-5 pt-1" action="/ok" method="post">
+                <input type="hidden" name="device_id" value="{{ device_index }}">
+                <input type="hidden" name="route" value="{{ request }}">
+                <div class="field">
+                    <div class="control">
+                        <button class="button has-background-success-50 is-size-5-mobile is-responsive" type="submit">Run</button>
+                    </div>
+                </div>
+            </form>
+            {% elif route.response_kind == "Serial" %}
+            <form class="container mt-5" action="/serial" method="post">
+                <div class="field">
+                    <div class="control">
+                        <button class="button has-background-success-55 is-size-5-mobile is-responsive" type="submit">Run</button>
+                    </div>
+                </div>
+            </form>
+            {% else %}
+            <a class="button has-background-success-55 is-size-5-mobile is-responsive" href="/view-stream">View Stream</a>
+            {% endif %}
+        {% else %}
+             TODO
+        {% endif %}
+
     </div>
 </div>
 {% endfor %}

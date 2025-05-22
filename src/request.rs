@@ -115,7 +115,10 @@ pub(crate) async fn send_ok_request(
     match response {
         // TODO: Add response to response log
         Response::OkBody(response) => {
-            response.parse_body().await.unwrap();
+            error_with_info(
+                response.parse_body().await,
+                "Error in retrieving the `Ok` response",
+            )?;
         }
         Response::Skipped => todo!("Add skipped response to response log"),
         _ => todo!("This is an error, add to response log"),
@@ -138,7 +141,10 @@ pub(crate) async fn send_serial_request(
     match response {
         // TODO: Add response to response log
         Response::SerialBody(response) => {
-            let serial_response = response.parse_body::<Value>().await.unwrap();
+            let serial_response = error_with_info(
+                response.parse_body::<Value>().await,
+                "Error in retrieving the serial response",
+            )?;
         }
         Response::Skipped => todo!("Add skipped response to response log"),
         _ => todo!("This is an error, add to response log"),
