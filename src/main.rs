@@ -22,7 +22,7 @@ use ascot_controller::controller::Controller;
 
 use axum::{
     handler::HandlerWithoutStateExt,
-    routing::{get, put},
+    routing::{get, post},
     Router,
 };
 
@@ -138,9 +138,9 @@ async fn main() {
         .route("/", get(index))
         .route("/privacy", get(privacy))
         .route("/response-log", get(response_log))
-        .route("/discovery", put(discover_devices))
-        .route("/ok", put(send_ok_request))
-        .route("/serial", put(send_serial_request))
+        .route("/discovery", post(discover_devices))
+        .route("/ok", post(send_ok_request))
+        .route("/serial", post(send_serial_request))
         // TODO: Implement Info route
         //.route("/info", put(send_info_request))
         // TODO: Implement Stream route

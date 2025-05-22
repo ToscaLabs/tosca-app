@@ -4,7 +4,7 @@ use ascot_controller::controller::Controller;
 use ascot_controller::parameters::Parameters;
 use ascot_controller::response::Response;
 
-use axum::extract::{Json, State};
+use axum::extract::{Form, State};
 use axum::response::Redirect;
 
 use serde::Deserialize;
@@ -26,6 +26,7 @@ pub(crate) struct RequestParameters {
 pub(crate) struct Request {
     device_id: usize,
     route: String,
+    #[serde(default)]
     parameters: Vec<RequestParameters>,
 }
 
@@ -94,7 +95,7 @@ async fn send_request(controller: &Controller, request: Request) -> Response {
 
 pub(crate) async fn send_ok_request(
     State(state): State<AppState>,
-    Json(request): Json<Request>,
+    Form(request): Form<Request>,
 ) -> Result<Redirect, Error> {
     println!("{:?}", request);
     /*let controller = state.controller.lock().await;
@@ -118,7 +119,7 @@ pub(crate) async fn send_ok_request(
 
 pub(crate) async fn send_serial_request(
     State(state): State<AppState>,
-    Json(request): Json<Request>,
+    Form(request): Form<Request>,
 ) -> Result<Redirect, Error> {
     println!("{:?}", request);
 
