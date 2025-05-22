@@ -10,7 +10,7 @@ use axum::response::Redirect;
 use serde::Deserialize;
 use serde_json::Value;
 
-use crate::error::Error;
+use crate::error::{error_with_info, Error};
 use crate::AppState;
 
 // TODO: Remove Debug trait
@@ -30,12 +30,12 @@ pub(crate) struct Request {
     parameters: Vec<RequestParameters>,
 }
 
-fn create_parameters(params: &[RequestParameters]) -> Parameters {
+fn create_parameters(params: &[RequestParameters]) -> Result<Parameters, Error> {
     let mut parameters = Parameters::new();
     for param in params {
         match param.kind {
             ParameterKind::Bool { .. } => {
-                let value = param.value.parse().unwrap();
+                let value = error_with_info(param.value.parse(), "Error parsing the input value")?;
                 parameters.bool(&param.name, value);
             }
             ParameterKind::U8 { .. } => {
@@ -68,28 +68,37 @@ fn create_parameters(params: &[RequestParameters]) -> Parameters {
             _ => unreachable!(),
         }
     }
-    parameters
+    Ok(parameters)
 }
 
-async fn send_request(controller: &Controller, request: Request) -> Response {
+async fn send_request(controller: &Controller, request: Request) -> Result<Response, Error> {
     // Find device sender
-    let device_sender = controller.device(request.device_id).unwrap();
+    let device_sender = error_with_info(
+        controller.device(request.device_id),
+        "Error in finding the device",
+    )?;
 
     // Send request.
-    let request_sender = device_sender.request(&request.route).unwrap();
+    let request_sender = error_with_info(
+        device_sender.request(&request.route),
+        "Error in creating the request for device",
+    )?;
 
     // Obtain response
     if request.parameters.is_empty() {
         // Send request.
-        request_sender.send().await.unwrap()
+        error_with_info(
+            request_sender.send().await,
+            "Error in sending the request with default parameters",
+        )
     } else {
         // Create parameters.
-        let parameters = create_parameters(&request.parameters);
+        let parameters = create_parameters(&request.parameters)?;
         // Send request with parameters.
-        request_sender
-            .send_with_parameters(&parameters)
-            .await
-            .unwrap()
+        error_with_info(
+            request_sender.send_with_parameters(&parameters).await,
+            "Error in sending the request with parameters",
+        )
     }
 }
 
@@ -97,11 +106,10 @@ pub(crate) async fn send_ok_request(
     State(state): State<AppState>,
     Form(request): Form<Request>,
 ) -> Result<Redirect, Error> {
-    println!("{:?}", request);
-    /*let controller = state.controller.lock().await;
+    let controller = state.controller.lock().await;
 
     // Send a request and obtain a  response.
-    let response = send_request(&controller, request).await;
+    let response = send_request(&controller, request).await?;
 
     // Check response kind.
     match response {
@@ -111,7 +119,7 @@ pub(crate) async fn send_ok_request(
         }
         Response::Skipped => todo!("Add skipped response to response log"),
         _ => todo!("This is an error, add to response log"),
-    }*/
+    }
 
     // Redirect to index
     Ok(Redirect::to("/"))
@@ -121,12 +129,10 @@ pub(crate) async fn send_serial_request(
     State(state): State<AppState>,
     Form(request): Form<Request>,
 ) -> Result<Redirect, Error> {
-    println!("{:?}", request);
-
-    /*let controller = state.controller.lock().await;
+    let controller = state.controller.lock().await;
 
     // Send a request and obtain a  response.
-    let response = send_request(&controller, request).await;
+    let response = send_request(&controller, request).await?;
 
     // Check response kind.
     match response {
@@ -136,7 +142,7 @@ pub(crate) async fn send_serial_request(
         }
         Response::Skipped => todo!("Add skipped response to response log"),
         _ => todo!("This is an error, add to response log"),
-    }*/
+    }
 
     // Redirect to index
     Ok(Redirect::to("/"))
