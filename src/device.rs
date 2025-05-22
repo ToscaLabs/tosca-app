@@ -13,6 +13,7 @@ pub(crate) mod fake {
     use ascot::device::{DeviceEnvironment, DeviceKind};
     use ascot::hazards::{Hazard, Hazards};
     use ascot::parameters::Parameters;
+    use ascot::response::ResponseKind;
     use ascot::route::{Route, RouteConfigs};
 
     use ascot_controller::device::{Description, Device, Devices, NetworkInformation};
@@ -43,16 +44,18 @@ pub(crate) mod fake {
     }
 
     pub(crate) fn create_light() -> Device {
-        let network_info = create_network_info("192.168.1.174", 5000);
+        let network_info = create_network_info("192.168.1.174", 3000);
         let description = create_description(DeviceKind::Light, "light/");
 
         let light_on_route = Route::put("/on")
             .description("Turn light on.")
             .with_hazard(Hazard::ElectricEnergyConsumption);
 
-        let light_off_route = Route::put("/off")
+        let mut light_off_route = Route::put("/off")
             .description("Turn light off.")
-            .with_hazard(Hazard::LogEnergyConsumption);
+            .with_hazard(Hazard::LogEnergyConsumption)
+            .serialize_data();
+        light_off_route.response_kind = ResponseKind::Serial;
 
         let toggle_route = Route::get("/toggle")
             .description("Toggle a light.")
@@ -65,61 +68,26 @@ pub(crate) mod fake {
 
         let route_configs = RouteConfigs::new()
             .insert(light_on_route.serialize_data())
-            .insert(light_off_route.serialize_data())
+            .insert(light_off_route)
             .insert(toggle_route.serialize_data());
 
         Device::new(network_info, description, route_configs)
     }
 
-    pub(crate) fn create_fridge() -> Device {
-        let network_info = create_network_info("192.168.1.175", 6000);
-        let description = create_description(DeviceKind::Fridge, "fridge/");
-
-        let increase_temperature_route = Route::put("/increase-temperature")
-            .description("Increase temperature.")
-            .with_hazards(
-                Hazards::new()
-                    .insert(Hazard::ElectricEnergyConsumption)
-                    .insert(Hazard::SpoiledFood),
-            )
-            .with_parameters(Parameters::new().rangef64_with_default(
-                "increment",
-                (1., 4., 0.1),
-                2.,
-            ));
-
-        let decrease_temperature_route = Route::put("/decrease-temperature")
-            .description("Decrease temperature.")
-            .with_hazards(
-                Hazards::new()
-                    .insert(Hazard::ElectricEnergyConsumption)
-                    .insert(Hazard::SpoiledFood),
-            )
-            .with_parameters(Parameters::new().rangef64_with_default(
-                "decrement",
-                (1., 4., 0.1),
-                2.,
-            ));
-
-        let route_configs = RouteConfigs::new()
-            .insert(increase_temperature_route.serialize_data())
-            .insert(decrease_temperature_route.serialize_data());
-
-        Device::new(network_info, description, route_configs)
-    }
-
     pub(crate) fn create_unknown() -> Device {
-        let network_info = create_network_info("192.168.1.176", 5500);
+        let network_info = create_network_info("192.168.1.176", 3000);
         let description = create_description(DeviceKind::Unknown, "ip-camera/");
 
-        let camera_stream_route = Route::get("/stream")
+        let mut camera_stream_route = Route::get("/stream")
             .description("View camera stream.")
             .with_hazards(
                 Hazards::new()
                     .insert(Hazard::ElectricEnergyConsumption)
                     .insert(Hazard::VideoDisplay)
                     .insert(Hazard::VideoRecordAndStore),
-            );
+            )
+            .serialize_data();
+        camera_stream_route.response_kind = ResponseKind::Stream;
 
         let screenshot_route = Route::get("/take-screenshot")
             .description("Take a screenshot.")
@@ -131,7 +99,7 @@ pub(crate) mod fake {
             );
 
         let route_configs = RouteConfigs::new()
-            .insert(camera_stream_route.serialize_data())
+            .insert(camera_stream_route)
             .insert(screenshot_route.serialize_data());
 
         Device::new(network_info, description, route_configs)
