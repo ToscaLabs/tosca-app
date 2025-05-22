@@ -35,31 +35,50 @@ fn create_parameters(params: &[RequestParameters]) -> Result<Parameters, Error> 
     for param in params {
         match param.kind {
             ParameterKind::Bool { .. } => {
-                let value = error_with_info(param.value.parse(), "Error parsing the input value")?;
+                let value = error_with_info(
+                    param.value.parse(),
+                    "Error in parsing the `bool` input value",
+                )?;
                 parameters.bool(&param.name, value);
             }
             ParameterKind::U8 { .. } => {
-                let value = param.value.parse().unwrap();
+                let value =
+                    error_with_info(param.value.parse(), "Error in parsing the `u8` input value")?;
                 parameters.u8(&param.name, value);
             }
             ParameterKind::U16 { .. } => {
-                let value = param.value.parse().unwrap();
+                let value = error_with_info(
+                    param.value.parse(),
+                    "Error in parsing the `u16` input value",
+                )?;
                 parameters.u16(&param.name, value);
             }
             ParameterKind::U32 { .. } => {
-                let value = param.value.parse().unwrap();
+                let value = error_with_info(
+                    param.value.parse(),
+                    "Error in parsing the `u32` input value",
+                )?;
                 parameters.u32(&param.name, value);
             }
             ParameterKind::U64 { .. } | ParameterKind::RangeU64 { .. } => {
-                let value = param.value.parse().unwrap();
+                let value = error_with_info(
+                    param.value.parse(),
+                    "Error in parsing the `u64` input value",
+                )?;
                 parameters.u64(&param.name, value);
             }
             ParameterKind::F32 { .. } => {
-                let value = param.value.parse().unwrap();
+                let value = error_with_info(
+                    param.value.parse(),
+                    "Error in parsing the `f32` input value",
+                )?;
                 parameters.f32(&param.name, value);
             }
             ParameterKind::F64 { .. } | ParameterKind::RangeF64 { .. } => {
-                let value = param.value.parse().unwrap();
+                let value = error_with_info(
+                    param.value.parse(),
+                    "Error in parsing the `f64` input value",
+                )?;
                 parameters.f64(&param.name, value);
             }
             ParameterKind::CharsSequence { .. } => {
