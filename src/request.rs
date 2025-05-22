@@ -84,7 +84,6 @@ fn create_parameters(params: &[RequestParameters]) -> Result<Parameters, Error> 
             ParameterKind::CharsSequence { .. } => {
                 parameters.characters_sequence(&param.name, param.value.clone());
             }
-            _ => unreachable!(),
         }
     }
     Ok(parameters)
