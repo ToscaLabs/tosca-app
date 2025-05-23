@@ -1,18 +1,19 @@
-use axum::extract::State;
+use axum::extract::{Path, State};
 use axum::response::Html;
 
 use minijinja::context;
 
 use crate::error::{error_with_info, Error};
-use crate::language::lang;
 use crate::layout;
 use crate::AppState;
 
-pub(crate) async fn privacy(State(state): State<AppState>) -> Result<Html<String>, Error> {
-    let template = error_with_info(
-        state.env.get_template("privacy"),
-        lang::PRIVACY_TEMPLATE_ERROR,
-    )?;
+pub(crate) async fn view_stream(
+    State(state): State<AppState>,
+    Path(id): Path<usize>,
+) -> Result<Html<String>, Error> {
+    let controller = state.controller.lock().await;
+
+    let template = error_with_info(state.env.get_template("stream"), "Stream error")?;
 
     let rendered = error_with_info(
         template.render(context! {
@@ -20,7 +21,7 @@ pub(crate) async fn privacy(State(state): State<AppState>) -> Result<Html<String
             navbar => layout::NAVBAR,
             footer => layout::footer(),
         }),
-        lang::PRIVACY_RENDER_ERROR,
+        "Error render Stream",
     )?;
 
     Ok(Html(rendered))

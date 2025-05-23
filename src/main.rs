@@ -13,11 +13,11 @@ mod privacy;
 mod request;
 // TODO: Maintains the response log and other methods
 mod response;
+mod stream;
 
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::sync::Arc;
 
-use ascot::hazards::{Hazard, HazardData};
 use ascot_controller::controller::Controller;
 
 use axum::{
@@ -28,7 +28,6 @@ use axum::{
 
 use clap::Parser;
 
-use minijinja::value::ViaDeserialize;
 use minijinja::Environment;
 
 use tokio::sync::Mutex;
@@ -42,6 +41,7 @@ use crate::language::lang;
 use crate::privacy::privacy;
 use crate::request::send_request;
 use crate::response::response_log;
+use crate::stream::view_stream;
 use crate::utils::{add_functions_to_env, create_controller};
 
 macro_rules! builtin_templates {
@@ -58,18 +58,23 @@ macro_rules! builtin_templates {
 }
 
 static TEMPLATES: &[(&str, &str)] = &builtin_templates![
+    // Layout page.
     ("layout", "layout.html"),
     ("head", "head.html"),
     ("navbar", "navbar.html"),
     ("footer", "footer.html"),
+    // Index page.
     ("index", "index.html"),
     ("create-devices", "create-devices.html"),
     ("modal-devices", "modal-devices.html"),
     ("modal-hazards", "modal-hazards.html"),
     ("error", "error.html"),
-    ("privacy", "privacy.html"),
     ("light", "light.html"),
-    ("unknown", "unknown.html")
+    ("unknown", "unknown.html"),
+    // Privacy page.
+    ("privacy", "privacy.html"),
+    // Stream page.
+    ("stream", "stream.html")
 ];
 
 #[derive(Parser)]
@@ -140,10 +145,7 @@ async fn main() {
         .route("/response-log", get(response_log))
         .route("/discovery", post(discover_devices))
         .route("/request", post(send_request))
-        // TODO: Implement Stream route
-        // <a href="/stream/id">Stream</a>
-        // To view the stream associated with this device.
-        //.route("/stream/{id}", get(stream_request))
+        .route("/view-stream/{id}", get(view_stream))
         .nest_service("/assets", serve_dir.clone())
         .fallback_service(serve_dir)
         .fallback(missing_route)

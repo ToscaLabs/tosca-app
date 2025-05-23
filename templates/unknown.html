@@ -39,7 +39,7 @@
         {% if route.parameters_data | length == 0 %}
             {% if route.response_kind == "Stream" %}
             <div class="container mt-5">
-                <a class="button has-background-success-55 is-size-5-mobile is-responsive" href="/view-stream">View Stream</a>
+                <a class="button has-background-success-55 is-size-5-mobile is-responsive" href="/view-stream/{{ device_index }}">View Stream</a>
             </div>
             {% else %}
             <form class="container mt-5 pt-1" action="/request" method="post">
