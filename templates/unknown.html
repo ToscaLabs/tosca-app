@@ -37,8 +37,12 @@
         </div>
 
         {% if route.parameters_data | length == 0 %}
-            {% if route.response_kind == "Ok" %}
-            <form class="container mt-5 pt-1" action="/ok" method="post">
+            {% if route.response_kind == "Stream" %}
+            <div class="container mt-5">
+                <a class="button has-background-success-55 is-size-5-mobile is-responsive" href="/view-stream">View Stream</a>
+            </div>
+            {% else %}
+            <form class="container mt-5 pt-1" action="/request" method="post">
                 <input type="hidden" name="device_id" value="{{ device_index }}">
                 <input type="hidden" name="route" value="{{ request }}">
                 <div class="field">
@@ -47,20 +51,6 @@
                     </div>
                 </div>
             </form>
-            {% elif route.response_kind == "Serial" %}
-            <form class="container mt-5" action="/serial" method="post">
-                <input type="hidden" name="device_id" value="{{ device_index }}">
-                <input type="hidden" name="route" value="{{ request }}">
-                <div class="field">
-                    <div class="control">
-                        <button class="button has-background-success-55 is-size-5-mobile is-responsive" type="submit">Run</button>
-                    </div>
-                </div>
-            </form>
-            {% else %}
-            <div class="container mt-5">
-                <a class="button has-background-success-55 is-size-5-mobile is-responsive" href="/view-stream">View Stream</a>
-            </div>
             {% endif %}
         {% else %}
              TODO

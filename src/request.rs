@@ -89,7 +89,7 @@ fn create_parameters(params: &[RequestParameters]) -> Result<Parameters, Error> 
     Ok(parameters)
 }
 
-async fn send_request(controller: &Controller, request: Request) -> Result<Response, Error> {
+async fn _send_request(controller: &Controller, request: Request) -> Result<Response, Error> {
     // Find device sender
     let device_sender = error_with_info(
         controller.device(request.device_id),
@@ -120,52 +120,39 @@ async fn send_request(controller: &Controller, request: Request) -> Result<Respo
     }
 }
 
-pub(crate) async fn send_ok_request(
+pub(crate) async fn send_request(
     State(state): State<AppState>,
     Form(request): Form<Request>,
 ) -> Result<Redirect, Error> {
     let controller = state.controller.lock().await;
 
     // Send a request and obtain a  response.
-    let response = send_request(&controller, request).await?;
+    let response = _send_request(&controller, request).await?;
 
+    // TODO: Add responses to response log.
+    //
     // Check response kind.
     match response {
-        // TODO: Add response to response log
         Response::OkBody(response) => {
             error_with_info(
                 response.parse_body().await,
                 "Error in retrieving the `Ok` response",
             )?;
         }
-        Response::Skipped => todo!("Add skipped response to response log"),
-        _ => todo!("This is an error, add to response log"),
-    }
-
-    // Redirect to index
-    Ok(Redirect::to("/"))
-}
-
-pub(crate) async fn send_serial_request(
-    State(state): State<AppState>,
-    Form(request): Form<Request>,
-) -> Result<Redirect, Error> {
-    let controller = state.controller.lock().await;
-
-    // Send a request and obtain a  response.
-    let response = send_request(&controller, request).await?;
-
-    // Check response kind.
-    match response {
-        // TODO: Add response to response log
         Response::SerialBody(response) => {
-            let serial_response = error_with_info(
+            error_with_info(
                 response.parse_body::<Value>().await,
                 "Error in retrieving the serial response",
             )?;
         }
+        Response::InfoBody(_response) => {}
+        // TODO: How to treat a skip response because of privacy here
         Response::Skipped => todo!("Add skipped response to response log"),
-        _ => todo!("This is an error, add to response log"),
+        Response::StreamBody(_) => {
+            return Err(Error::with_description(
+                "This is a Stream Response, something went really wrong.",
+            ))
+        }
     }
 
     // Redirect to index

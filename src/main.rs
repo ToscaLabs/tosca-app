@@ -36,11 +36,11 @@ use tokio::sync::Mutex;
 use tower_http::services::ServeDir;
 
 use crate::device::discover_devices;
-use crate::error::missing_assets;
+use crate::error::{missing_assets, missing_route};
 use crate::index::index;
 use crate::language::lang;
 use crate::privacy::privacy;
-use crate::request::{send_ok_request, send_serial_request};
+use crate::request::send_request;
 use crate::response::response_log;
 use crate::utils::{add_functions_to_env, create_controller};
 
@@ -139,16 +139,14 @@ async fn main() {
         .route("/privacy", get(privacy))
         .route("/response-log", get(response_log))
         .route("/discovery", post(discover_devices))
-        .route("/ok", post(send_ok_request))
-        .route("/serial", post(send_serial_request))
-        // TODO: Implement Info route
-        //.route("/info", put(send_info_request))
+        .route("/request", post(send_request))
         // TODO: Implement Stream route
         // <a href="/stream/id">Stream</a>
         // To view the stream associated with this device.
         //.route("/stream/{id}", get(stream_request))
         .nest_service("/assets", serve_dir.clone())
         .fallback_service(serve_dir)
+        .fallback(missing_route)
         .with_state(app_state);
 
     // Creates the web controller listener bind.
@@ -166,8 +164,8 @@ async fn main() {
         tracing::info!(r#"Policy: GET, "/privacy"]"#);
         tracing::info!(r#"Response Log: GET, "/response-log"]"#);
         tracing::info!(r#"Discovery: [PUT, "/discovery"]"#);
-        tracing::info!(r#"Ok request: [PUT, "/ok"]"#);
-        tracing::info!(r#"Serial request: [PUT, "/serial"]"#);
+        tracing::info!(r#"Send request: [PUT, "/request"]"#);
+        tracing::info!(r#"Assets: [SERVICE, "/assets"]"#);
         tracing::info!("{}: {listener_bind}", lang::CONTROLLER_ADDRESS_MESSAGE);
         tracing::info!("{}", lang::CONTROLLER_STARTUP_MESSAGE);
     }

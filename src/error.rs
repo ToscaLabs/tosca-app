@@ -1,6 +1,6 @@
 use axum::{
     extract::Json,
-    http::StatusCode,
+    http::{StatusCode, Uri},
     response::{IntoResponse, Response},
 };
 
@@ -23,6 +23,10 @@ pub(crate) async fn missing_assets() -> Error {
     Error::with_description("Failed to load the `assets` directory")
 }
 
+pub(crate) async fn missing_route(uri: Uri) -> Error {
+    Error::with_description(&format!("No route for {uri}"))
+}
+
 #[derive(Serialize)]
 pub(crate) struct Error {
     // Error description.
@@ -33,7 +37,7 @@ pub(crate) struct Error {
 }
 
 impl Error {
-    fn with_description(description: &str) -> Self {
+    pub(crate) fn with_description(description: &str) -> Self {
         Self {
             description: description.into(),
             info: None,
