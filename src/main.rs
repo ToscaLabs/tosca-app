@@ -165,6 +165,7 @@ async fn main() {
         tracing::info!(r#"Home: [GET, "/"]"#);
         tracing::info!(r#"Policy: GET, "/privacy"]"#);
         tracing::info!(r#"Response Log: GET, "/response-log"]"#);
+        tracing::info!(r#"View Stream: GET, "/view-stream/{{id}}"]"#);
         tracing::info!(r#"Discovery: [PUT, "/discovery"]"#);
         tracing::info!(r#"Send request: [PUT, "/request"]"#);
         tracing::info!(r#"Assets: [SERVICE, "/assets"]"#);

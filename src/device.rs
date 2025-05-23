@@ -96,7 +96,13 @@ pub(crate) mod fake {
                     .insert(Hazard::ElectricEnergyConsumption)
                     .insert(Hazard::TakeDeviceScreenshots)
                     .insert(Hazard::TakePictures),
-            );
+            )
+            .with_parameters(Parameters::new().f64("focal", 0.).u32_with_limits(
+                "screenshot-number",
+                1,
+                1,
+                3,
+            ));
 
         let route_configs = RouteConfigs::new()
             .insert(camera_stream_route)
