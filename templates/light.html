@@ -36,13 +36,100 @@
         {% endfor %}
         </div>
 
-        {% if route.parameters_data | length == 0 %}
-            {% if route.response_kind == "Stream" %}
+        {% for parameter_name in route.parameters_data %}
+        {% set parameter = route.parameters_data[parameter_name] %}
+        <label class="label mt-5">{{ parameter_name | capitalize }}</label>
+           <div class="field">
+                <div class="control">
+                    {% if parameter["Bool"] %}
+                        <input type="checkbox">
+                    {% endif %}
+                    {% if parameter["U8"] %}
+                        {% set data = parameter["U8"] %}
+                        <input type="number"
+                               value="{{ data }}"
+                               min="{{ data.min }}"
+                               max="{{ data.max }}"
+                        >
+                    {% endif %}
+                    {% if parameter["U16"] %}
+                        {% set data = parameter["U16"] %}
+                        <input type="number"
+                               value="{{ data }}"
+                               min="{{ data.min }}"
+                               max="{{ data.max }}"
+                        >
+                    {% endif %}
+                    {% if parameter["U32"] %}
+                        {% set data = parameter["U32"] %}
+                        <input type="number"
+                               value="{{ data }}"
+                               min="{{ data.min }}"
+                               max="{{ data.max }}"
+                        >
+                    {% endif %}
+                    {% if parameter["U64"] %}
+                        {% set data = parameter["U64"] %}
+                        <input type="number"
+                               value="{{ data }}"
+                               min="{{ data.min }}"
+                               max="{{ data.max }}"
+                        >
+                    {% endif %}
+                    {% if parameter["F32"] %}
+                        {% set data = parameter["F32"] %}
+                        <input type="number"
+                               value="{{ data }}"
+                               min="{{ data.min }}"
+                               max="{{ data.max }}"
+                               step="{{ data.step }}"
+                        >
+                    {% endif %}
+                    {% if parameter["F64"] %}
+                        {% set data = parameter["F64"] %}
+                        <input type="number"
+                               value="{{ data }}"
+                               min="{{ data.min }}"
+                               max="{{ data.max }}"
+                               step="{{ data.step }}"
+                        >
+                    {% endif %}
+                    {% if parameter["RangeU64"] %}
+                        {% set data = parameter["RangeU64"] %}
+                        <input type="range"
+                               min="{{ data.min}}"
+                               max="{{ data.max }}"
+                               value="{{ data.default }}"
+                               step="{{ data.step }}"
+                        >
+                    {% endif %}
+                    {% if parameter["RangeF64"] %}
+                        {% set data = parameter["RangeF64"] %}
+                        <input type="range"
+                               min="{{ data.min}}"
+                               max="{{ data.max }}"
+                               value="{{ data.default }}"
+                               step="{{ data.step }}"
+                        >
+                    {% endif %}
+                    {% if parameter["CharsSequence"] %}
+                        {% set data = parameter["CharsSequence"] %}
+                        <input type="text"required
+                               minlength="0"
+                               maxlength="{{ data.length }}"
+                               size="10"
+                        >
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+
+        {% if route.response_kind == "Stream" %}
             <div class="container mt-5">
                 <a class="button has-background-success-55 is-size-5-mobile is-responsive" href="/view-stream/{{ device_index }}">View Stream</a>
             </div>
-            {% else %}
-            <form class="container mt-5 pt-1" action="/request" method="post">
+        {% else %}
+            <form class="container mt-4 pt-1" action="/request" method="post">
                 <input type="hidden" name="device_id" value="{{ device_index }}">
                 <input type="hidden" name="route" value="{{ request }}">
                 <div class="field">
@@ -51,9 +138,6 @@
                     </div>
                 </div>
             </form>
-            {% endif %}
-        {% else %}
-             TODO
         {% endif %}
 
     </div>
