@@ -98,7 +98,7 @@ pub(crate) mod fake {
                     .insert(Hazard::TakePictures),
             )
             .with_parameters(Parameters::new().f64("focal", 0.).u32_with_limits(
-                "screenshot-number",
+                "number of screenshots",
                 1,
                 1,
                 3,

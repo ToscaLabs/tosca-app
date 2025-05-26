@@ -71,6 +71,7 @@ static TEMPLATES: &[(&str, &str)] = &builtin_templates![
     ("error", "error.html"),
     ("light", "light.html"),
     ("unknown", "unknown.html"),
+    ("parameters", "parameters.html"),
     // Privacy page.
     ("privacy", "privacy.html"),
     // Stream page.
