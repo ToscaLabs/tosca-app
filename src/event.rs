@@ -7,13 +7,13 @@ use crate::error::{error_with_info, Error};
 use crate::layout;
 use crate::AppState;
 
-pub(crate) async fn view_stream(
+pub(crate) async fn event_log(
     State(state): State<AppState>,
     Path(_device_id): Path<usize>,
 ) -> Result<Html<String>, Error> {
     let controller = state.controller.lock().await;
 
-    let template = error_with_info(state.env.get_template("stream"), "Stream error")?;
+    let template = error_with_info(state.env.get_template("event-log"), "Event log error")?;
 
     let rendered = error_with_info(
         template.render(context! {
@@ -21,7 +21,7 @@ pub(crate) async fn view_stream(
             navbar => layout::NAVBAR,
             footer => layout::footer(),
         }),
-        "Error render Stream",
+        "Event log render",
     )?;
 
     Ok(Html(rendered))

@@ -3,6 +3,7 @@ mod utils;
 // TODO: Implement database
 mod database;
 mod error;
+mod event;
 mod index;
 mod info;
 mod language;
@@ -37,6 +38,7 @@ use tower_http::services::ServeDir;
 
 use crate::device::discover_devices;
 use crate::error::{missing_assets, missing_route};
+use crate::event::event_log;
 use crate::index::index;
 use crate::info::view_info;
 use crate::language::lang;
@@ -80,7 +82,11 @@ static TEMPLATES: &[(&str, &str)] = &builtin_templates![
     // Stream page.
     ("stream", "stream.html"),
     // Info page.
-    ("info", "info.html")
+    ("info", "info.html"),
+    // Event log page.
+    ("event-log", "event-log.html"),
+    // Response log page.
+    ("response-log", "response-log.html")
 ];
 
 #[derive(Parser)]
@@ -148,11 +154,12 @@ async fn main() {
     let app = Router::new()
         .route("/", get(index))
         .route("/privacy", get(privacy))
-        .route("/response-log", get(response_log))
+        .route("/view-stream/{device_id}", get(view_stream))
+        .route("/view-info/{device_id}", get(view_info))
+        .route("/event-log/{device_id}", get(event_log))
+        .route("/response-log/{device_id}", get(response_log))
         .route("/discovery", post(discover_devices))
         .route("/request", post(send_request))
-        .route("/view-stream/{id}", get(view_stream))
-        .route("/view-info/{id}", get(view_info))
         .nest_service("/assets", serve_dir.clone())
         .fallback_service(serve_dir)
         .fallback(missing_route)
@@ -169,14 +176,24 @@ async fn main() {
     // Prints listener bind and controller startup message.
     #[cfg(feature = "logging")]
     {
+        // Navbar route.
         tracing::info!(r#"Home: [GET, "/"]"#);
         tracing::info!(r#"Policy: GET, "/privacy"]"#);
-        tracing::info!(r#"Response Log: GET, "/response-log"]"#);
-        tracing::info!(r#"View Stream: GET, "/view-stream/{{-device_id}}"]"#);
+
+        // Device GET routes.
+        tracing::info!(r#"View Stream: GET, "/view-stream/{{device_id}}"]"#);
         tracing::info!(r#"View Info: GET, "/view-info/{{device_id}}"]"#);
+        tracing::info!(r#"Event Log: GET, "/event-log/{{device_id}}"]"#);
+        tracing::info!(r#"Response Log: GET, "/response-log/{{device_id}}"]"#);
+
+        // Device controller commands.
         tracing::info!(r#"Discovery: [PUT, "/discovery"]"#);
         tracing::info!(r#"Send request: [PUT, "/request"]"#);
+
+        // Assets
         tracing::info!(r#"Assets: [SERVICE, "/assets"]"#);
+
+        // Server information.
         tracing::info!("{}: {listener_bind}", lang::CONTROLLER_ADDRESS_MESSAGE);
         tracing::info!("{}", lang::CONTROLLER_STARTUP_MESSAGE);
     }
