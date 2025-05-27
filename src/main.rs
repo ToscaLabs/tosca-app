@@ -4,6 +4,7 @@ mod utils;
 mod database;
 mod error;
 mod index;
+mod info;
 mod language;
 mod layout;
 #[cfg(feature = "logging")]
@@ -37,6 +38,7 @@ use tower_http::services::ServeDir;
 use crate::device::discover_devices;
 use crate::error::{missing_assets, missing_route};
 use crate::index::index;
+use crate::info::view_info;
 use crate::language::lang;
 use crate::privacy::privacy;
 use crate::request::send_request;
@@ -76,7 +78,9 @@ static TEMPLATES: &[(&str, &str)] = &builtin_templates![
     // Privacy page.
     ("privacy", "privacy.html"),
     // Stream page.
-    ("stream", "stream.html")
+    ("stream", "stream.html"),
+    // Info page.
+    ("info", "info.html")
 ];
 
 #[derive(Parser)]
@@ -148,6 +152,7 @@ async fn main() {
         .route("/discovery", post(discover_devices))
         .route("/request", post(send_request))
         .route("/view-stream/{id}", get(view_stream))
+        .route("/view-info/{id}", get(view_info))
         .nest_service("/assets", serve_dir.clone())
         .fallback_service(serve_dir)
         .fallback(missing_route)
@@ -167,7 +172,8 @@ async fn main() {
         tracing::info!(r#"Home: [GET, "/"]"#);
         tracing::info!(r#"Policy: GET, "/privacy"]"#);
         tracing::info!(r#"Response Log: GET, "/response-log"]"#);
-        tracing::info!(r#"View Stream: GET, "/view-stream/{{id}}"]"#);
+        tracing::info!(r#"View Stream: GET, "/view-stream/{{-device_id}}"]"#);
+        tracing::info!(r#"View Info: GET, "/view-info/{{device_id}}"]"#);
         tracing::info!(r#"Discovery: [PUT, "/discovery"]"#);
         tracing::info!(r#"Send request: [PUT, "/request"]"#);
         tracing::info!(r#"Assets: [SERVICE, "/assets"]"#);

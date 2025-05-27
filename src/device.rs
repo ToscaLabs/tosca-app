@@ -49,7 +49,8 @@ pub(crate) mod fake {
 
         let light_on_route = Route::put("/on")
             .description("Turn light on.")
-            .with_hazard(Hazard::ElectricEnergyConsumption);
+            .with_hazard(Hazard::ElectricEnergyConsumption)
+            .serialize_data();
 
         let mut light_off_route = Route::put("/off")
             .description("Turn light off.")
@@ -64,12 +65,20 @@ pub(crate) mod fake {
                     .insert(Hazard::FireHazard)
                     .insert(Hazard::ElectricEnergyConsumption),
             )
-            .with_parameters(Parameters::new().rangeu64("brightness", (0, 20, 1)));
+            .with_parameters(Parameters::new().rangeu64("brightness", (0, 20, 1)))
+            .serialize_data();
+
+        let mut light_info_route = Route::get("/info")
+            .description("Retrieve light information.")
+            .with_hazard(Hazard::LogEnergyConsumption)
+            .serialize_data();
+        light_info_route.response_kind = ResponseKind::Info;
 
         let route_configs = RouteConfigs::new()
-            .insert(light_on_route.serialize_data())
+            .insert(light_on_route)
             .insert(light_off_route)
-            .insert(toggle_route.serialize_data());
+            .insert(toggle_route)
+            .insert(light_info_route);
 
         Device::new(network_info, description, route_configs)
     }

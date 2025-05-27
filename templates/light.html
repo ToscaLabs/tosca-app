@@ -2,6 +2,9 @@
 
 {% for request in device.requests %}
 {% set route = device.requests[request] %}
+
+{% if route.response_kind != "Info" %}
+
 <div class="card">
     <header class="card-header has-background-success-50">
         <p class="card-header-title is-centered has-text-centered is-size-5-mobile">
@@ -42,4 +45,5 @@
 
     </div>
 </div>
+{% endif %}
 {% endfor %}
