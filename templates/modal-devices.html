@@ -1,5 +1,8 @@
 {% for device in devices %}
 {% set device_index = loop.index0 %}
+
+{% for request in device.requests %}
+{% set route = device.requests[request] %}
 <div id="modal-{{ device.description.kind }}-{{ device_index }}" class="modal">
     <div class="modal-background"></div>
     <div class="modal-content">
@@ -11,14 +14,17 @@
                 <p class="has-text-left">
                 The device main route is <code>{{ device.description.main_route }}</code>.
                 </p>
+                {% if route.response_kind == "Info" %}
+                <div class="container mt-5">
+                    <a class="button has-background-success-50 is-size-5-mobile is-responsive" href="/info/{{ device_index }}">View Detailed Info</a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
     <button class="modal-close is-large" aria-label="close"></button>
 </div>
 
-{% for request in device.requests %}
-{% set route = device.requests[request] %}
 <div id="modal-{{ device.description.kind }}-{{ device_index }}-{{ loop.index0 }}" class="modal">
     <div class="modal-background"></div>
     <div class="modal-content">
