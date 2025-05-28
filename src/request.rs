@@ -41,59 +41,51 @@ pub(crate) struct Request {
     values: Vec<String>,
 }
 
-/*fn create_parameters(params: &[RequestParameters]) -> Result<Parameters, Error> {
+fn create_parameters<'a>(
+    ids: Vec<ParameterId>,
+    names: &'a [String],
+    values: Vec<String>,
+) -> Result<Parameters<'a>, Error> {
     let mut parameters = Parameters::new();
-    for param in params {
-        match param.id {
+    for (i, value) in values.into_iter().enumerate() {
+        match ids[i] {
             ParameterId::Bool => {
-                let value = error_with_info(
-                    param.value.parse(),
-                    "Error in parsing the `bool` input value",
-                )?;
-                parameters.bool(&param.name, value);
+                let value =
+                    error_with_info(value.parse(), "Error in parsing the `bool` input value")?;
+                parameters.bool(&names[i], value);
             }
             ParameterId::U8 => {
                 let value =
-                    error_with_info(param.value.parse(), "Error in parsing the `u8` input value")?;
-                parameters.u8(&param.name, value);
+                    error_with_info(value.parse(), "Error in parsing the `u8` input value")?;
+                parameters.u8(&names[i], value);
             }
             ParameterId::U16 => {
-                let value = error_with_info(
-                    param.value.parse(),
-                    "Error in parsing the `u16` input value",
-                )?;
-                parameters.u16(&param.name, value);
+                let value =
+                    error_with_info(value.parse(), "Error in parsing the `u16` input value")?;
+                parameters.u16(&names[i], value);
             }
             ParameterId::U32 => {
-                let value = error_with_info(
-                    param.value.parse(),
-                    "Error in parsing the `u32` input value",
-                )?;
-                parameters.u32(&param.name, value);
+                let value =
+                    error_with_info(value.parse(), "Error in parsing the `u32` input value")?;
+                parameters.u32(&names[i], value);
             }
             ParameterId::U64 | ParameterId::RangeU64 => {
-                let value = error_with_info(
-                    param.value.parse(),
-                    "Error in parsing the `u64` input value",
-                )?;
-                parameters.u64(&param.name, value);
+                let value =
+                    error_with_info(value.parse(), "Error in parsing the `u64` input value")?;
+                parameters.u64(&names[i], value);
             }
             ParameterId::F32 => {
-                let value = error_with_info(
-                    param.value.parse(),
-                    "Error in parsing the `f32` input value",
-                )?;
-                parameters.f32(&param.name, value);
+                let value =
+                    error_with_info(value.parse(), "Error in parsing the `f32` input value")?;
+                parameters.f32(&names[i], value);
             }
             ParameterId::F64 | ParameterId::RangeF64 => {
-                let value = error_with_info(
-                    param.value.parse(),
-                    "Error in parsing the `f64` input value",
-                )?;
-                parameters.f64(&param.name, value);
+                let value =
+                    error_with_info(value.parse(), "Error in parsing the `f64` input value")?;
+                parameters.f64(&names[i], value);
             }
             ParameterId::CharsSequence => {
-                parameters.characters_sequence(&param.name, param.value.clone());
+                parameters.characters_sequence(&names[i], value);
             }
         }
     }
@@ -101,20 +93,26 @@ pub(crate) struct Request {
 }
 
 async fn _send_request(controller: &Controller, request: Request) -> Result<Response, Error> {
+    let Request {
+        device_id,
+        route,
+        ids,
+        names,
+        values,
+    } = request;
+
     // Find device sender
-    let device_sender = error_with_info(
-        controller.device(request.device_id),
-        "Error in finding the device",
-    )?;
+    let device_sender =
+        error_with_info(controller.device(device_id), "Error in finding the device")?;
 
     // Send request.
     let request_sender = error_with_info(
-        device_sender.request(&request.route),
+        device_sender.request(&route),
         "Error in creating the request for device",
     )?;
 
     // Obtain response
-    if request.parameters.is_empty() {
+    if ids.is_empty() {
         // Send request.
         error_with_info(
             request_sender.send().await,
@@ -122,14 +120,14 @@ async fn _send_request(controller: &Controller, request: Request) -> Result<Resp
         )
     } else {
         // Create parameters.
-        let parameters = create_parameters(&request.parameters)?;
+        let parameters = create_parameters(ids, &names, values)?;
         // Send request with parameters.
         error_with_info(
             request_sender.send_with_parameters(&parameters).await,
             "Error in sending the request with parameters",
         )
     }
-}*/
+}
 
 pub(crate) async fn send_request(
     State(state): State<AppState>,
@@ -137,10 +135,8 @@ pub(crate) async fn send_request(
 ) -> Result<Redirect, Error> {
     let controller = state.controller.lock().await;
 
-    println!("{:?}", request);
-
     // Send a request and obtain a  response.
-    /*let response = _send_request(&controller, request).await?;
+    let response = _send_request(&controller, request).await?;
 
     // TODO: Add responses to response log.
     //
@@ -167,7 +163,7 @@ pub(crate) async fn send_request(
                 "This is a Stream Response, something went really wrong.",
             ))
         }
-    }*/
+    }
 
     // Redirect to index
     Ok(Redirect::to("/"))
