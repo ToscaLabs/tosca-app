@@ -1,12 +1,12 @@
-{% macro input_number(parameter, name, parameter_index) -%}
+{% macro input_number(parameter, name) -%}
     {% if parameter[name] %}
         {% set data = parameter[name] %}
-        <input type="hidden" name="parameters[{{ parameter_index }}][id]" value="{{ name }}">
+        <input type="hidden" name="ids" value="{{ name }}">
         <input type="number"
                value="{{ data.default }}"
                min="{{ data.min }}"
                max="{{ data.max }}"
-               name="parameters[{{ parameter_index }}][value]"
+               name="values"
         >
     {% endif %}
 {%- endmacro %}
@@ -14,13 +14,13 @@
 {% macro input_float(parameter, name, parameter_index) -%}
     {% if parameter[name] %}
         {% set data = parameter[name] %}
-        <input type="hidden" name="parameters[{{ parameter_index }}][id]" value="{{ name }}">
+        <input type="hidden" name="ids" value="{{ name }}">
         <input type="number"
                value="{{ data.default }}"
                min="{{ data.min }}"
                max="{{ data.max }}"
                step={% if data.step == 0 %} "any" {% else %} "{{ data.step }}" {% endif %}
-               name="parameters[{{ parameter_index }}][value]"
+               name="values"
         >
     {% endif %}
 {%- endmacro %}
@@ -28,47 +28,46 @@
 {% macro input_range(parameter, name, parameter_index) -%}
     {% if parameter[name] %}
         {% set data = parameter[name] %}
-        <input type="hidden" name="parameters[{{ parameter_index }}][id]" value="{{ name }}">
+        <input type="hidden" name="ids" value="{{ name }}">
         <input type="range"
                min="{{ data.min}}"
                max="{{ data.max }}"
                value="{{ data.default }}"
                step="{{ data.step }}"
-               name="parameters[{{ parameter_index }}][value]"
+               name="values"
         >
     {% endif %}
 {%- endmacro %}
 
 
 {% for parameter_name in route.parameters_data %}
-{% set parameter_index = loop.index0 %}
 {% set parameter = route.parameters_data[parameter_name] %}
+<input type="hidden" name="names" value="{{ parameter_name }}">
 <label class="label mt-5">{{ parameter_name | title }}</label>
    <div class="field">
-        <input type="hidden" name="parameters[{{ parameter_index }}][name]" value="{{ parameter_name }}">
         <div class="control">
             {% if parameter["Bool"] %}
-                <input type="hidden" name="parameters[{{ parameter_index }}][id]" value="Bool">
-                <input type="checkbox" name="parameters[{{ parameter_index }}][value]">
+                <input type="hidden" name="ids" value="Bool">
+                <input type="checkbox" name="values">
             {% endif %}
 
-            {{ input_number(parameter, "U8", parameter_index) }}
-            {{ input_number(parameter, "U16", parameter_index) }}
-            {{ input_number(parameter, "U32", parameter_index) }}
-            {{ input_number(parameter, "U64", parameter_index) }}
-            {{ input_float(parameter, "F32", parameter_index) }}
-            {{ input_float(parameter, "F64", parameter_index) }}
-            {{ input_range(parameter, "RangeU64", parameter_index) }}
-            {{ input_range(parameter, "RangeF64", parameter_index) }}
+            {{ input_number(parameter, "U8") }}
+            {{ input_number(parameter, "U16") }}
+            {{ input_number(parameter, "U32") }}
+            {{ input_number(parameter, "U64") }}
+            {{ input_float(parameter, "F32") }}
+            {{ input_float(parameter, "F64") }}
+            {{ input_range(parameter, "RangeU64") }}
+            {{ input_range(parameter, "RangeF64") }}
 
             {% if parameter["CharsSequence"] %}
                 {% set data = parameter["CharsSequence"] %}
-                <input type="hidden" name="parameters[{{ parameter_index }}][id]" value="CharsSequence">
+                <input type="hidden" name="ids" value="CharsSequence">
                 <input type="text"required
                        minlength="0"
                        maxlength="{{ data.length }}"
                        size="10"
-                       name="parameters[{{ parameter_index }}][value]"
+                       name="values"
                 >
             {% endif %}
         </div>

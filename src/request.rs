@@ -2,8 +2,10 @@ use ascot_controller::controller::Controller;
 use ascot_controller::parameters::Parameters;
 use ascot_controller::response::Response;
 
-use axum::extract::{Form, State};
+use axum::extract::State;
 use axum::response::Redirect;
+
+use axum_extra::extract::Form;
 
 use serde::Deserialize;
 use serde_json::Value;
@@ -28,21 +30,18 @@ enum ParameterId {
 }
 
 #[derive(Debug, Deserialize)]
-pub(crate) struct RequestParameters {
-    id: ParameterId,
-    name: String,
-    value: String,
-}
-
-#[derive(Debug, Deserialize)]
 pub(crate) struct Request {
     device_id: usize,
     route: String,
     #[serde(default)]
-    parameters: Vec<RequestParameters>,
+    ids: Vec<ParameterId>,
+    #[serde(default)]
+    names: Vec<String>,
+    #[serde(default)]
+    values: Vec<String>,
 }
 
-fn create_parameters(params: &[RequestParameters]) -> Result<Parameters, Error> {
+/*fn create_parameters(params: &[RequestParameters]) -> Result<Parameters, Error> {
     let mut parameters = Parameters::new();
     for param in params {
         match param.id {
@@ -130,7 +129,7 @@ async fn _send_request(controller: &Controller, request: Request) -> Result<Resp
             "Error in sending the request with parameters",
         )
     }
-}
+}*/
 
 pub(crate) async fn send_request(
     State(state): State<AppState>,

@@ -14,7 +14,11 @@ ascot-controller.branch = "controller"
 
 axum.version = "0.8.0"
 axum.default-features = false
-axum.features = ["tokio", "http1", "http2", "form", "json"]
+axum.features = ["tokio", "http1", "http2", "json"]
+
+axum-extra.version = "0.10.1"
+axum-extra.default-features = false
+axum-extra.features = ["form", "query"]
 
 chrono.version = "0.4"
 chrono.default-features = false
