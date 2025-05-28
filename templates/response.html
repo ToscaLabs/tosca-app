@@ -1,17 +1,17 @@
 {% if route.response_kind == "Stream" %}
     <div class="container mt-5">
-        <a class="button has-background-success-50 is-size-5-mobile is-responsive" href="/view-stream/{{ device_index }}">View Stream</a>
+        <a class="button has-background-success-50 is-size-6-mobile is-responsive" href="/view-stream/{{ device_index }}">View Stream</a>
     </div>
 {% elif route.response_kind == "Ok" or route.response_kind == "Serial" %}
-    <form class="container mt-4 pt-1" action="/request" method="post">
+    <form class="container" action="/request" method="post">
         <input type="hidden" name="device_id" value="{{ device_index }}">
         <input type="hidden" name="route" value="{{ request }}">
 
         {% include "parameters" %}
 
-        <div class="field">
+        <div class="field mt-5">
             <div class="control">
-                <button class="button has-background-success-50 is-size-5-mobile is-responsive" type="submit">Run</button>
+                <button class="button has-background-success-50 is-size-6-mobile is-responsive" type="submit">Run</button>
             </div>
         </div>
     </form>
