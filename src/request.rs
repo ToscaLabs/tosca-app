@@ -1,5 +1,3 @@
-use ascot::parameters::ParameterKind;
-
 use ascot_controller::controller::Controller;
 use ascot_controller::parameters::Parameters;
 use ascot_controller::response::Response;
@@ -16,8 +14,22 @@ use crate::AppState;
 // TODO: Remove Debug trait
 
 #[derive(Debug, Deserialize)]
+enum ParameterId {
+    Bool,
+    U8,
+    U16,
+    U32,
+    U64,
+    RangeU64,
+    F32,
+    F64,
+    RangeF64,
+    CharsSequence,
+}
+
+#[derive(Debug, Deserialize)]
 pub(crate) struct RequestParameters {
-    kind: ParameterKind,
+    id: ParameterId,
     name: String,
     value: String,
 }
@@ -33,55 +45,55 @@ pub(crate) struct Request {
 fn create_parameters(params: &[RequestParameters]) -> Result<Parameters, Error> {
     let mut parameters = Parameters::new();
     for param in params {
-        match param.kind {
-            ParameterKind::Bool { .. } => {
+        match param.id {
+            ParameterId::Bool => {
                 let value = error_with_info(
                     param.value.parse(),
                     "Error in parsing the `bool` input value",
                 )?;
                 parameters.bool(&param.name, value);
             }
-            ParameterKind::U8 { .. } => {
+            ParameterId::U8 => {
                 let value =
                     error_with_info(param.value.parse(), "Error in parsing the `u8` input value")?;
                 parameters.u8(&param.name, value);
             }
-            ParameterKind::U16 { .. } => {
+            ParameterId::U16 => {
                 let value = error_with_info(
                     param.value.parse(),
                     "Error in parsing the `u16` input value",
                 )?;
                 parameters.u16(&param.name, value);
             }
-            ParameterKind::U32 { .. } => {
+            ParameterId::U32 => {
                 let value = error_with_info(
                     param.value.parse(),
                     "Error in parsing the `u32` input value",
                 )?;
                 parameters.u32(&param.name, value);
             }
-            ParameterKind::U64 { .. } | ParameterKind::RangeU64 { .. } => {
+            ParameterId::U64 | ParameterId::RangeU64 => {
                 let value = error_with_info(
                     param.value.parse(),
                     "Error in parsing the `u64` input value",
                 )?;
                 parameters.u64(&param.name, value);
             }
-            ParameterKind::F32 { .. } => {
+            ParameterId::F32 => {
                 let value = error_with_info(
                     param.value.parse(),
                     "Error in parsing the `f32` input value",
                 )?;
                 parameters.f32(&param.name, value);
             }
-            ParameterKind::F64 { .. } | ParameterKind::RangeF64 { .. } => {
+            ParameterId::F64 | ParameterId::RangeF64 => {
                 let value = error_with_info(
                     param.value.parse(),
                     "Error in parsing the `f64` input value",
                 )?;
                 parameters.f64(&param.name, value);
             }
-            ParameterKind::CharsSequence { .. } => {
+            ParameterId::CharsSequence => {
                 parameters.characters_sequence(&param.name, param.value.clone());
             }
         }
@@ -146,7 +158,8 @@ pub(crate) async fn send_request(
             )?;
         }
         Response::InfoBody(_response) => {}
-        // TODO: How to treat a skip response because of privacy here
+        // TODO: How to treat a skip response because of privacy here. Add to
+        // response log.
         Response::Skipped => todo!("Add skipped response to response log"),
         Response::StreamBody(_) => {
             return Err(Error::with_description(

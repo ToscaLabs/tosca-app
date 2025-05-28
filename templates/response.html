@@ -6,6 +6,9 @@
     <form class="container mt-4 pt-1" action="/request" method="post">
         <input type="hidden" name="device_id" value="{{ device_index }}">
         <input type="hidden" name="route" value="{{ request }}">
+
+        {% include "parameters" %}
+
         <div class="field">
             <div class="control">
                 <button class="button has-background-success-50 is-size-5-mobile is-responsive" type="submit">Run</button>
