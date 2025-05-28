@@ -1,3 +1,5 @@
+use ascot::parameters::ParameterId;
+
 use ascot_controller::controller::Controller;
 use ascot_controller::parameters::Parameters;
 use ascot_controller::response::Response;
@@ -13,23 +15,8 @@ use serde_json::Value;
 use crate::error::{error_with_info, Error};
 use crate::AppState;
 
-// TODO: Remove Debug trait
-
-#[derive(Debug, Deserialize)]
-enum ParameterId {
-    Bool,
-    U8,
-    U16,
-    U32,
-    U64,
-    RangeU64,
-    F32,
-    F64,
-    RangeF64,
-    CharsSequence,
-}
-
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
+#[cfg_attr(feature = "logging", derive(Debug))]
 pub(crate) struct Request {
     device_id: usize,
     route: String,
@@ -50,9 +37,7 @@ fn create_parameters<'a>(
     for (i, value) in values.into_iter().enumerate() {
         match ids[i] {
             ParameterId::Bool => {
-                let value =
-                    error_with_info(value.parse(), "Error in parsing the `bool` input value")?;
-                parameters.bool(&names[i], value);
+                parameters.bool(&names[i], value.is_empty());
             }
             ParameterId::U8 => {
                 let value =
@@ -133,6 +118,9 @@ pub(crate) async fn send_request(
     State(state): State<AppState>,
     Form(request): Form<Request>,
 ) -> Result<Redirect, Error> {
+    #[cfg(feature = "logging")]
+    tracing::info!("{:?}", request);
+
     let controller = state.controller.lock().await;
 
     // Send a request and obtain a  response.

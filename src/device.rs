@@ -55,6 +55,7 @@ pub(crate) mod fake {
         let mut light_off_route = Route::put("/off")
             .description("Turn light off.")
             .with_hazard(Hazard::LogEnergyConsumption)
+            .with_parameters(Parameters::new().bool("energy saved", false))
             .serialize_data();
         light_off_route.response_kind = ResponseKind::Serial;
 
