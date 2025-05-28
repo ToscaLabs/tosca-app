@@ -138,8 +138,10 @@ pub(crate) async fn send_request(
 ) -> Result<Redirect, Error> {
     let controller = state.controller.lock().await;
 
+    println!("{:?}", request);
+
     // Send a request and obtain a  response.
-    let response = _send_request(&controller, request).await?;
+    /*let response = _send_request(&controller, request).await?;
 
     // TODO: Add responses to response log.
     //
@@ -166,7 +168,7 @@ pub(crate) async fn send_request(
                 "This is a Stream Response, something went really wrong.",
             ))
         }
-    }
+    }*/
 
     // Redirect to index
     Ok(Redirect::to("/"))
