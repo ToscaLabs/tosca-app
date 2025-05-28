@@ -1,4 +1,4 @@
-# `ascot web-controller`
+# `ascot-web-controller`
 
 ## Building
 
@@ -40,4 +40,3 @@ cargo build --features italian
     - [Button with loading spinner in HTML and CSS](https://www.google.com/search?q=how%20to%20add%20a%20loader%20when%20a%20button%20is%20clicked&ie=utf-8&oe=utf-8&client=firefox-b-m)
 
 ### Controller
-
