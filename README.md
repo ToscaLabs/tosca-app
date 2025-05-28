@@ -1,4 +1,7 @@
-# `ascot-web-controller`
+# `tosca`
+
+**tosca** is a web controller built for the
+[Ascot Framework](https://github.com/SoftengPoliTo/ascot).
 
 ## Building
 
