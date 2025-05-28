@@ -1,7 +1,9 @@
 # `tosca`
 
-**tosca** is a web controller built for the
-[Ascot Framework](https://github.com/SoftengPoliTo/ascot).
+[![LICENSE][license badge]][license]
+
+**tosca** is a web controller for
+[Ascot](https://github.com/SoftengPoliTo/ascot) devices.
 
 ## Building
 
@@ -43,3 +45,9 @@ cargo build --features italian
     - [Button with loading spinner in HTML and CSS](https://www.google.com/search?q=how%20to%20add%20a%20loader%20when%20a%20button%20is%20clicked&ie=utf-8&oe=utf-8&client=firefox-b-m)
 
 ### Controller
+
+<!-- Links -->
+[license]: https://github.com/Luni-4/tosca/blob/master/LICENSE
+
+<!-- Badges -->
+[license badge]: https://img.shields.io/badge/license-MIT-blue.svg
