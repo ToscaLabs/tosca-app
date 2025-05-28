@@ -6,11 +6,9 @@ edition = "2024"
 [dependencies]
 ascot.version = "0.1.0"
 ascot.git = "https://github.com/SoftengPoliTo/ascot"
-ascot.branch = "controller"
 
 ascot-controller.version = "0.1.0"
 ascot-controller.git = "https://github.com/SoftengPoliTo/ascot"
-ascot-controller.branch = "controller"
 
 axum.version = "0.8.0"
 axum.default-features = false
