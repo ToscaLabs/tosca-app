@@ -146,7 +146,11 @@ pub(crate) async fn discover_devices(State(state): State<AppState>) -> Result<Re
     let mut controller = state.controller.lock().await;
 
     // Discover devices
-    error_with_info(controller.discover().await, lang::DISCOVERY_ERROR)?;
+    error_with_info(
+        &state.env,
+        controller.discover().await,
+        lang::DISCOVERY_ERROR,
+    )?;
 
     // If some devices have been found, delete every old device from the
     // database and insert every discovered devices.

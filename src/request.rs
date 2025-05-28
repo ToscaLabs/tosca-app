@@ -9,6 +9,8 @@ use axum::response::Redirect;
 
 use axum_extra::extract::Form;
 
+use minijinja::Environment;
+
 use serde::Deserialize;
 use serde_json::Value;
 
@@ -29,6 +31,7 @@ pub(crate) struct Request {
 }
 
 fn create_parameters<'a>(
+    env: &Environment<'static>,
     ids: Vec<ParameterId>,
     names: &'a [String],
     values: Vec<String>,
@@ -41,32 +44,32 @@ fn create_parameters<'a>(
             }
             ParameterId::U8 => {
                 let value =
-                    error_with_info(value.parse(), "Error in parsing the `u8` input value")?;
+                    error_with_info(env, value.parse(), "Error in parsing the `u8` input value")?;
                 parameters.u8(&names[i], value);
             }
             ParameterId::U16 => {
                 let value =
-                    error_with_info(value.parse(), "Error in parsing the `u16` input value")?;
+                    error_with_info(env, value.parse(), "Error in parsing the `u16` input value")?;
                 parameters.u16(&names[i], value);
             }
             ParameterId::U32 => {
                 let value =
-                    error_with_info(value.parse(), "Error in parsing the `u32` input value")?;
+                    error_with_info(env, value.parse(), "Error in parsing the `u32` input value")?;
                 parameters.u32(&names[i], value);
             }
             ParameterId::U64 | ParameterId::RangeU64 => {
                 let value =
-                    error_with_info(value.parse(), "Error in parsing the `u64` input value")?;
+                    error_with_info(env, value.parse(), "Error in parsing the `u64` input value")?;
                 parameters.u64(&names[i], value);
             }
             ParameterId::F32 => {
                 let value =
-                    error_with_info(value.parse(), "Error in parsing the `f32` input value")?;
+                    error_with_info(env, value.parse(), "Error in parsing the `f32` input value")?;
                 parameters.f32(&names[i], value);
             }
             ParameterId::F64 | ParameterId::RangeF64 => {
                 let value =
-                    error_with_info(value.parse(), "Error in parsing the `f64` input value")?;
+                    error_with_info(env, value.parse(), "Error in parsing the `f64` input value")?;
                 parameters.f64(&names[i], value);
             }
             ParameterId::CharsSequence => {
@@ -77,7 +80,11 @@ fn create_parameters<'a>(
     Ok(parameters)
 }
 
-async fn _send_request(controller: &Controller, request: Request) -> Result<Response, Error> {
+async fn _send_request(
+    env: &Environment<'static>,
+    controller: &Controller,
+    request: Request,
+) -> Result<Response, Error> {
     let Request {
         device_id,
         route,
@@ -87,11 +94,15 @@ async fn _send_request(controller: &Controller, request: Request) -> Result<Resp
     } = request;
 
     // Find device sender
-    let device_sender =
-        error_with_info(controller.device(device_id), "Error in finding the device")?;
+    let device_sender = error_with_info(
+        env,
+        controller.device(device_id),
+        "Error in finding the device",
+    )?;
 
     // Send request.
     let request_sender = error_with_info(
+        env,
         device_sender.request(&route),
         "Error in creating the request for device",
     )?;
@@ -100,14 +111,16 @@ async fn _send_request(controller: &Controller, request: Request) -> Result<Resp
     if ids.is_empty() {
         // Send request.
         error_with_info(
+            env,
             request_sender.send().await,
             "Error in sending the request with default parameters",
         )
     } else {
         // Create parameters.
-        let parameters = create_parameters(ids, &names, values)?;
+        let parameters = create_parameters(env, ids, &names, values)?;
         // Send request with parameters.
         error_with_info(
+            env,
             request_sender.send_with_parameters(&parameters).await,
             "Error in sending the request with parameters",
         )
@@ -121,10 +134,12 @@ pub(crate) async fn send_request(
     #[cfg(feature = "logging")]
     tracing::info!("{:?}", request);
 
+    let env = state.env;
+
     let controller = state.controller.lock().await;
 
     // Send a request and obtain a  response.
-    let response = _send_request(&controller, request).await?;
+    let response = _send_request(&env, &controller, request).await?;
 
     // TODO: Add responses to response log.
     //
@@ -132,12 +147,14 @@ pub(crate) async fn send_request(
     match response {
         Response::OkBody(response) => {
             error_with_info(
+                &env,
                 response.parse_body().await,
                 "Error in retrieving the `Ok` response",
             )?;
         }
         Response::SerialBody(response) => {
             error_with_info(
+                &env,
                 response.parse_body::<Value>().await,
                 "Error in retrieving the serial response",
             )?;
@@ -147,7 +164,8 @@ pub(crate) async fn send_request(
         // response log.
         Response::Skipped => todo!("Add skipped response to response log"),
         Response::StreamBody(_) => {
-            return Err(Error::with_description(
+            return Err(Error::description_page(
+                &env,
                 "This is a Stream Response, something went really wrong.",
             ))
         }

@@ -9,9 +9,10 @@ use crate::layout;
 use crate::AppState;
 
 pub(crate) async fn view_info(State(state): State<AppState>) -> Result<Html<String>, Error> {
-    let template = error_with_info(state.env.get_template("info"), "Info error")?;
+    let template = error_with_info(&state.env, state.env.get_template("info"), "Info error")?;
 
     let rendered = error_with_info(
+        &state.env,
         template.render(context! {
             title => "Ascot Controller",
             navbar => layout::NAVBAR,

@@ -13,9 +13,10 @@ pub(crate) async fn view_stream(
 ) -> Result<Html<String>, Error> {
     let controller = state.controller.lock().await;
 
-    let template = error_with_info(state.env.get_template("stream"), "Stream error")?;
+    let template = error_with_info(&state.env, state.env.get_template("stream"), "Stream error")?;
 
     let rendered = error_with_info(
+        &state.env,
         template.render(context! {
             title => "Ascot Controller",
             navbar => layout::NAVBAR,

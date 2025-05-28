@@ -12,7 +12,11 @@ use crate::AppState;
 pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>, Error> {
     let controller = state.controller.lock().await;
 
-    let template = error_with_info(state.env.get_template("index"), lang::INDEX_TEMPLATE_ERROR)?;
+    let template = error_with_info(
+        &state.env,
+        state.env.get_template("index"),
+        lang::INDEX_TEMPLATE_ERROR,
+    )?;
 
     // TODO: Only the hazards associated with each discovered device must be considered.
     let all_hazards = retrieve_all_hazards();
@@ -24,6 +28,7 @@ pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>,
     let devices = crate::device::fake::create_fake_devices();
 
     let rendered = error_with_info(
+        &state.env,
         template.render(context! {
             title => "Ascot Controller",
             navbar => layout::NAVBAR,

@@ -13,9 +13,14 @@ pub(crate) async fn event_log(
 ) -> Result<Html<String>, Error> {
     let controller = state.controller.lock().await;
 
-    let template = error_with_info(state.env.get_template("event-log"), "Event log error")?;
+    let template = error_with_info(
+        &state.env,
+        state.env.get_template("event-log"),
+        "Event log error",
+    )?;
 
     let rendered = error_with_info(
+        &state.env,
         template.render(context! {
             title => "Ascot Controller",
             navbar => layout::NAVBAR,
