@@ -9,25 +9,8 @@ use minijinja::Environment;
 use serde::Serialize;
 
 use crate::language::lang;
-use crate::layout;
+use crate::layout::{self, RenderLayout};
 use crate::AppState;
-
-#[derive(Serialize)]
-struct RenderLayout {
-    title: &'static str,
-    navbar: &'static [layout::NavBar],
-    footer: String,
-}
-
-impl RenderLayout {
-    pub(crate) fn new() -> Self {
-        Self {
-            title: "Ascot Controller",
-            navbar: layout::NAVBAR,
-            footer: layout::footer(),
-        }
-    }
-}
 
 #[derive(Serialize)]
 struct RenderError<'a> {
@@ -40,28 +23,24 @@ struct RenderError<'a> {
 }
 
 impl<'a> RenderError<'a> {
-    pub(crate) fn description(description: &'a str) -> Self {
-        Self {
-            layout: RenderLayout::new(),
-            description,
-            info: None,
-            goto_message: "Go to devices",
-            index: "/",
-        }
+    fn description(description: &'a str) -> Self {
+        Self::new(description, None)
     }
 
-    pub(crate) fn error(description: &'a str, info: String) -> Self {
+    fn error(description: &'a str, info: String) -> Self {
+        Self::new(description, Some(info))
+    }
+
+    fn new(description: &'a str, info: Option<String>) -> Self {
         Self {
             layout: RenderLayout::new(),
             description,
-            info: Some(info),
-            goto_message: "Go to devices",
-            index: "/",
+            info,
+            goto_message: lang::GOTO_DEVICES,
+            index: layout::INDEX_ROUTE,
         }
     }
 }
-
-const ASSETS_ERROR: &str = "Failed to load the `assets` directory";
 
 pub(crate) fn error_with_info<T, E: std::error::Error>(
     env: &Environment<'static>,
@@ -72,11 +51,14 @@ pub(crate) fn error_with_info<T, E: std::error::Error>(
 }
 
 pub(crate) async fn missing_assets() -> Error {
-    print_error(ASSETS_ERROR, Error::json_description(ASSETS_ERROR))
+    print_error(
+        lang::ASSETS_ERROR,
+        Error::json_description(lang::ASSETS_ERROR),
+    )
 }
 
 pub(crate) async fn missing_route(State(state): State<AppState>, uri: Uri) -> Error {
-    let error = format!("No route for {uri}");
+    let error = format!("{} `{uri}`", lang::MISSING_ROUTE);
     print_error(&error, Error::description_page(&state.env, &error))
 }
 
@@ -129,12 +111,12 @@ impl Error {
     fn render_template(env: &Environment<'static>, context: RenderError) -> Self {
         let template = match env.get_template("error") {
             Ok(template) => template,
-            Err(e) => return Self::minijinja_error("Error in loading the `error` template", e),
+            Err(e) => return Self::minijinja_error(lang::ERROR_TEMPLATE_ERROR, e),
         };
 
         let rendered = match template.render(context) {
             Ok(rendered) => rendered,
-            Err(e) => return Self::minijinja_error("Error in rendering the `error` template", e),
+            Err(e) => return Self::minijinja_error(lang::ERROR_RENDER_ERROR, e),
         };
 
         Self((StatusCode::INTERNAL_SERVER_ERROR, Html(rendered)).into_response())

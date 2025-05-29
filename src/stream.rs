@@ -1,10 +1,9 @@
 use axum::extract::{Path, State};
 use axum::response::Html;
 
-use minijinja::context;
-
 use crate::error::{error_with_info, Error};
-use crate::layout;
+use crate::language::lang;
+use crate::layout::RenderLayout;
 use crate::AppState;
 
 pub(crate) async fn view_stream(
@@ -13,16 +12,16 @@ pub(crate) async fn view_stream(
 ) -> Result<Html<String>, Error> {
     let controller = state.controller.lock().await;
 
-    let template = error_with_info(&state.env, state.env.get_template("stream"), "Stream error")?;
+    let template = error_with_info(
+        &state.env,
+        state.env.get_template("stream"),
+        lang::STREAM_TEMPLATE_ERROR,
+    )?;
 
     let rendered = error_with_info(
         &state.env,
-        template.render(context! {
-            title => "Ascot Controller",
-            navbar => layout::NAVBAR,
-            footer => layout::footer(),
-        }),
-        "Error render Stream",
+        template.render(RenderLayout::new()),
+        lang::STREAM_RENDER_ERROR,
     )?;
 
     Ok(Html(rendered))

@@ -5,16 +5,30 @@ pub(crate) mod lang {
     pub(crate) const LISTENER_ERROR: &str = "Listener creation failed";
     pub(crate) const SERVER_STARTUP_ERROR: &str = "Server startup failed";
 
-    // Route errors.
+    // Error route errors.
+    pub(crate) const ERROR_TEMPLATE_ERROR: &str = "Error in retrieving the `error` template";
+    pub(crate) const ERROR_RENDER_ERROR: &str = "Error in rendering the `error` template";
+
+    // Index route errors.
     pub(crate) const INDEX_TEMPLATE_ERROR: &str = "Error in retrieving the `index` template";
     pub(crate) const INDEX_RENDER_ERROR: &str = "Error in rendering the `index` template";
+    // Discovery route errors.
     pub(crate) const DISCOVERY_ERROR: &str = "Error in discovering devices";
+    // Privacy route errors.
     pub(crate) const PRIVACY_TEMPLATE_ERROR: &str = "Error in retrieving the `policy` template";
     pub(crate) const PRIVACY_RENDER_ERROR: &str = "Error in rendering the `policy` template";
+    // Stream route errors.
+    pub(crate) const STREAM_TEMPLATE_ERROR: &str = "Error in retrieving the `stream` template";
+    pub(crate) const STREAM_RENDER_ERROR: &str = "Error in rendering the `stream` template";
 
-    // Route page titles.
-    pub(crate) const INDEX_TITLE: &str = "Home";
-    pub(crate) const PRIVACY_TITLE: &str = "Privacy";
+    // Navbar items.
+    pub(crate) const INDEX_ITEM: &str = "Home";
+    pub(crate) const PRIVACY_ITEM: &str = "Privacy";
+
+    // Error page messages.
+    pub(crate) const GOTO_DEVICES: &str = "Go to devices";
+    pub(crate) const ASSETS_ERROR: &str = "Error in loading the `assets` directory";
+    pub(crate) const MISSING_ROUTE: &str = "No route for";
 
     // Devices messages.
     pub(crate) const NO_DEVICES: &str = "No devices found.";
@@ -40,20 +54,34 @@ pub(crate) mod lang {
 #[cfg(feature = "italian")]
 pub(crate) mod lang {
     // Web controller startup errors.
-    pub(crate) const LOADING_TEMPLATE_ERROR: &str = "Errore caricamento template";
-    pub(crate) const LISTENER_ERROR: &str = "Creazione listener fallita";
-    pub(crate) const SERVER_STARTUP_ERROR: &str = "Avvio server fallito";
+    pub(crate) const LOADING_TEMPLATE_ERROR: &str = "Errore di caricamento template";
+    pub(crate) const LISTENER_ERROR: &str = "Creazione del listener fallita";
+    pub(crate) const SERVER_STARTUP_ERROR: &str = "Fallimento nell'avvio del server";
 
-    // Route errors.
+    // Error route errors.
+    pub(crate) const ERROR_TEMPLATE_ERROR: &str = "Errore nel trovare il template `error`";
+    pub(crate) const ERROR_RENDER_ERROR: &str = "Errore nel renderizzare il template `error`";
+
+    // Index route errors.
     pub(crate) const INDEX_TEMPLATE_ERROR: &str = "Errore nel trovare il template `index`";
     pub(crate) const INDEX_RENDER_ERROR: &str = "Errore nel renderizzare il template `index`";
-    pub(crate) const DISCOVERY_ERROR: &str = "Errore nell'individuazione dei dispositivi";
+    // Discovery route errors.
+    pub(crate) const DISCOVERY_ERROR: &str = "Errore nell'individuare i dispositivi";
+    // Privacy route errors.
     pub(crate) const PRIVACY_TEMPLATE_ERROR: &str = "Errore nel trovare il template `policy`";
     pub(crate) const PRIVACY_RENDER_ERROR: &str = "Errore nel renderizzare il template `policy`";
+    // Stream route errors.
+    pub(crate) const STREAM_TEMPLATE_ERROR: &str = "Errore nel trovare il template `stream`";
+    pub(crate) const STREAM_RENDER_ERROR: &str = "Errore nel renderizzare il template `stream`";
 
-    // Route page names.
-    pub(crate) const INDEX_TITLE: &str = "Dispositivi";
-    pub(crate) const PRIVACY_TITLE: &str = "Privacy";
+    // Navbar items.
+    pub(crate) const INDEX_ITEM: &str = "Dispositivi";
+    pub(crate) const PRIVACY_ITEM: &str = "Privacy";
+
+    // Error page messages.
+    pub(crate) const GOTO_DEVICES: &str = "Torna ai dispositivi";
+    pub(crate) const ASSETS_ERROR: &str = "Errore nel caricare la cartella `assets`";
+    pub(crate) const MISSING_ROUTE: &str = "Nessun percorso chiamato";
 
     // Devices messages.
     pub(crate) const NO_DEVICES: &str = "Nessun dispositivo trovato.";
