@@ -4,13 +4,62 @@ use axum::{
     response::{Html, IntoResponse, Response},
 };
 
-use minijinja::{context, Environment, Value};
+use minijinja::Environment;
 
 use serde::Serialize;
 
 use crate::language::lang;
 use crate::layout;
 use crate::AppState;
+
+#[derive(Serialize)]
+struct RenderLayout {
+    title: &'static str,
+    navbar: &'static [layout::NavBar],
+    footer: String,
+}
+
+impl RenderLayout {
+    pub(crate) fn new() -> Self {
+        Self {
+            title: "Ascot Controller",
+            navbar: layout::NAVBAR,
+            footer: layout::footer(),
+        }
+    }
+}
+
+#[derive(Serialize)]
+struct RenderError<'a> {
+    #[serde(flatten)]
+    layout: RenderLayout,
+    description: &'a str,
+    info: Option<String>,
+    goto_message: &'static str,
+    index: &'static str,
+}
+
+impl<'a> RenderError<'a> {
+    pub(crate) fn description(description: &'a str) -> Self {
+        Self {
+            layout: RenderLayout::new(),
+            description,
+            info: None,
+            goto_message: "Go to devices",
+            index: "/",
+        }
+    }
+
+    pub(crate) fn error(description: &'a str, info: String) -> Self {
+        Self {
+            layout: RenderLayout::new(),
+            description,
+            info: Some(info),
+            goto_message: "Go to devices",
+            index: "/",
+        }
+    }
+}
 
 const ASSETS_ERROR: &str = "Failed to load the `assets` directory";
 
@@ -66,17 +115,7 @@ pub(crate) struct Error(Response);
 
 impl Error {
     pub(crate) fn description_page(env: &Environment<'static>, description: &str) -> Self {
-        Self::render_template(
-            env,
-            context! {
-                title => "Ascot Controller",
-                navbar => layout::NAVBAR,
-                description => description,
-                goto_message => "Go to devices",
-                index => "/",
-                footer => layout::footer(),
-            },
-        )
+        Self::render_template(env, RenderError::description(description))
     }
 
     fn error_page(
@@ -84,21 +123,10 @@ impl Error {
         description: &str,
         info: impl std::error::Error,
     ) -> Self {
-        Self::render_template(
-            env,
-            context! {
-                title => "Ascot Controller",
-                navbar => layout::NAVBAR,
-                description => description,
-                error_message => info.to_string(),
-                goto_message => "Go to devices",
-                index => "/",
-                footer => layout::footer(),
-            },
-        )
+        Self::render_template(env, RenderError::error(description, info.to_string()))
     }
 
-    fn render_template(env: &Environment<'static>, context: Value) -> Self {
+    fn render_template(env: &Environment<'static>, context: RenderError) -> Self {
         let template = match env.get_template("error") {
             Ok(template) => template,
             Err(e) => return Self::minijinja_error("Error in loading the `error` template", e),
