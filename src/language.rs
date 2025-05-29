@@ -5,6 +5,14 @@ pub(crate) mod lang {
     pub(crate) const LISTENER_ERROR: &str = "Listener creation failed";
     pub(crate) const SERVER_STARTUP_ERROR: &str = "Server startup failed";
 
+    // Routes.
+    pub(crate) const INFO_ROUTE: &str = "/view-info/{device_id}";
+    pub(crate) const STREAM_ROUTE: &str = "/view-stream/{device_id}";
+    pub(crate) const EVENT_ROUTE: &str = "/event-log/{device_id}";
+    pub(crate) const RESPONSE_ROUTE: &str = "/response-log/{device_id}";
+    pub(crate) const DISCOVERY_ROUTE: &str = "/discovery";
+    pub(crate) const REQUEST_ROUTE: &str = "/request";
+
     // Error route errors.
     pub(crate) const ERROR_TEMPLATE_ERROR: &str = "Error in retrieving the `error` template";
     pub(crate) const ERROR_RENDER_ERROR: &str = "Error in rendering the `error` template";
@@ -67,6 +75,14 @@ pub(crate) mod lang {
     pub(crate) const LOADING_TEMPLATE_ERROR: &str = "Errore di caricamento template";
     pub(crate) const LISTENER_ERROR: &str = "Creazione del listener fallita";
     pub(crate) const SERVER_STARTUP_ERROR: &str = "Fallimento nell'avvio del server";
+
+    // Routes.
+    pub(crate) const INFO_ROUTE: &str = "/visualizza-informazioni/{device_id}";
+    pub(crate) const STREAM_ROUTE: &str = "/visualizza-stream/{device_id}";
+    pub(crate) const EVENT_ROUTE: &str = "/registro-eventi/{device_id}";
+    pub(crate) const RESPONSE_ROUTE: &str = "/registro-risposte/{device_id}";
+    pub(crate) const DISCOVERY_ROUTE: &str = "/scopri-device";
+    pub(crate) const REQUEST_ROUTE: &str = "/richiesta";
 
     // Error route errors.
     pub(crate) const ERROR_TEMPLATE_ERROR: &str = "Errore nel trovare il template `error`";

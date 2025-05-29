@@ -152,14 +152,14 @@ async fn main() {
 
     // Define routes
     let app = Router::new()
-        .route("/", get(index))
+        .route(layout::INDEX_ROUTE, get(index))
         .route("/privacy", get(privacy))
-        .route("/view-stream/{device_id}", get(view_stream))
-        .route("/view-info/{device_id}", get(view_info))
-        .route("/event-log/{device_id}", get(event_log))
-        .route("/response-log/{device_id}", get(response_log))
-        .route("/discovery", post(discover_devices))
-        .route("/request", post(send_request))
+        .route(lang::INFO_ROUTE, get(view_info))
+        .route(lang::STREAM_ROUTE, get(view_stream))
+        .route(lang::EVENT_ROUTE, get(event_log))
+        .route(lang::RESPONSE_ROUTE, get(response_log))
+        .route(lang::DISCOVERY_ROUTE, post(discover_devices))
+        .route(lang::REQUEST_ROUTE, post(send_request))
         .nest_service("/assets", serve_dir.clone())
         .fallback_service(serve_dir)
         .fallback(missing_route)
@@ -177,18 +177,18 @@ async fn main() {
     #[cfg(feature = "logging")]
     {
         // Navbar route.
-        tracing::info!(r#"Home: [GET, "/"]"#);
+        tracing::info!(r#"Home: [GET, {}]"#, layout::INDEX_ROUTE);
         tracing::info!(r#"Policy: GET, "/privacy"]"#);
 
         // Device GET routes.
-        tracing::info!(r#"View Stream: GET, "/view-stream/{{device_id}}"]"#);
-        tracing::info!(r#"View Info: GET, "/view-info/{{device_id}}"]"#);
-        tracing::info!(r#"Event Log: GET, "/event-log/{{device_id}}"]"#);
-        tracing::info!(r#"Response Log: GET, "/response-log/{{device_id}}"]"#);
+        tracing::info!(r#"View Info: GET, {}]"#, lang::INFO_ROUTE);
+        tracing::info!(r#"View Stream: GET, {}]"#, lang::STREAM_ROUTE);
+        tracing::info!(r#"Event Log: GET, {}]"#, lang::EVENT_ROUTE);
+        tracing::info!(r#"Response Log: GET, {}]"#, lang::RESPONSE_ROUTE);
 
         // Device controller commands.
-        tracing::info!(r#"Discovery: [PUT, "/discovery"]"#);
-        tracing::info!(r#"Send request: [PUT, "/request"]"#);
+        tracing::info!(r#"Discovery: [PUT, {}]"#, lang::DISCOVERY_ROUTE);
+        tracing::info!(r#"Send request: [PUT, {}]"#, lang::REQUEST_ROUTE);
 
         // Assets
         tracing::info!(r#"Assets: [SERVICE, "/assets"]"#);
