@@ -139,31 +139,21 @@ impl Error {
 
 impl IntoResponse for Error {
     fn into_response(self) -> Response {
-        match self.state {
-            ErrorState::Success => {
-                (StatusCode::INTERNAL_SERVER_ERROR, Html(self.data)).into_response()
-            }
-            ErrorState::Assets => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(JsonError::with_description(&self.data)),
-            )
-                .into_response(),
-            ErrorState::Template => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(JsonError::with_description_error(
-                    lang::ERROR_TEMPLATE_ERROR,
-                    self.data,
-                )),
-            )
-                .into_response(),
-            ErrorState::Render => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(JsonError::with_description_error(
-                    lang::ERROR_RENDER_ERROR,
-                    self.data,
-                )),
-            )
-                .into_response(),
-        }
+        let body = match self.state {
+            ErrorState::Success => Html(self.data).into_response(),
+            ErrorState::Assets => Json(JsonError::with_description(&self.data)).into_response(),
+            ErrorState::Template => Json(JsonError::with_description_error(
+                lang::ERROR_TEMPLATE_ERROR,
+                self.data,
+            ))
+            .into_response(),
+            ErrorState::Render => Json(JsonError::with_description_error(
+                lang::ERROR_RENDER_ERROR,
+                self.data,
+            ))
+            .into_response(),
+        };
+
+        (StatusCode::INTERNAL_SERVER_ERROR, body).into_response()
     }
 }
