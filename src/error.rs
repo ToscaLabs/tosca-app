@@ -72,6 +72,8 @@ impl Error {
                 title => "Ascot Controller",
                 navbar => layout::NAVBAR,
                 description => description,
+                goto_message => "Go to devices",
+                index => "/",
                 footer => layout::footer(),
             },
         )
@@ -88,7 +90,9 @@ impl Error {
                 title => "Ascot Controller",
                 navbar => layout::NAVBAR,
                 description => description,
-                info => info.to_string(),
+                error_message => info.to_string(),
+                goto_message => "Go to devices",
+                index => "/",
                 footer => layout::footer(),
             },
         )

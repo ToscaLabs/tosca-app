@@ -55,7 +55,7 @@ tracing-subscriber.optional = true
 
 # TODO: Remove fake devices feature from default
 [features]
-default = ["logging"]
+default = ["logging", "fake-devices"]
 logging = ["tracing", "tracing-subscriber"]
 italian = []
 fake-devices = []
