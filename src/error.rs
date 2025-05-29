@@ -53,7 +53,7 @@ pub(crate) fn error_with_info<T, E: std::error::Error>(
 pub(crate) async fn missing_assets() -> Error {
     print_error(
         lang::ASSETS_ERROR,
-        Error::json_description(lang::ASSETS_ERROR),
+        Error::new(ErrorState::Assets, lang::ASSETS_ERROR.into()),
     )
 }
 
@@ -85,15 +85,25 @@ impl<'a> JsonError<'a> {
         }
     }
 
-    fn with_description_error(description: &'a str, info: impl std::error::Error) -> Self {
+    fn with_description_error(description: &'a str, info: String) -> Self {
         Self {
             description,
-            info: Some(info.to_string()),
+            info: Some(info),
         }
     }
 }
 
-pub(crate) struct Error(Response);
+enum ErrorState {
+    Success,
+    Assets,
+    Template,
+    Render,
+}
+
+pub(crate) struct Error {
+    state: ErrorState,
+    data: String,
+}
 
 impl Error {
     pub(crate) fn description_page(env: &Environment<'static>, description: &str) -> Self {
@@ -111,36 +121,49 @@ impl Error {
     fn render_template(env: &Environment<'static>, context: RenderError) -> Self {
         let template = match env.get_template("error") {
             Ok(template) => template,
-            Err(e) => return Self::minijinja_error(lang::ERROR_TEMPLATE_ERROR, e),
+            Err(e) => return Self::new(ErrorState::Template, e.to_string()),
         };
 
         let rendered = match template.render(context) {
             Ok(rendered) => rendered,
-            Err(e) => return Self::minijinja_error(lang::ERROR_RENDER_ERROR, e),
+            Err(e) => return Self::new(ErrorState::Render, e.to_string()),
         };
 
-        Self((StatusCode::INTERNAL_SERVER_ERROR, Html(rendered)).into_response())
+        Self::new(ErrorState::Success, rendered)
     }
 
-    fn minijinja_error(description: &str, error: minijinja::Error) -> Self {
-        Self::json_error(description, error)
-    }
-
-    fn json_error(description: &str, error: impl std::error::Error) -> Self {
-        Self::description_response(JsonError::with_description_error(description, error))
-    }
-
-    fn json_description(description: &str) -> Self {
-        Self::description_response(JsonError::with_description(description))
-    }
-
-    fn description_response(json_error: JsonError) -> Self {
-        Self((StatusCode::INTERNAL_SERVER_ERROR, Json(json_error)).into_response())
+    fn new(state: ErrorState, data: String) -> Self {
+        Self { state, data }
     }
 }
 
 impl IntoResponse for Error {
     fn into_response(self) -> Response {
-        self.0
+        match self.state {
+            ErrorState::Success => {
+                (StatusCode::INTERNAL_SERVER_ERROR, Html(self.data)).into_response()
+            }
+            ErrorState::Assets => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(JsonError::with_description(&self.data)),
+            )
+                .into_response(),
+            ErrorState::Template => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(JsonError::with_description_error(
+                    lang::ERROR_TEMPLATE_ERROR,
+                    self.data,
+                )),
+            )
+                .into_response(),
+            ErrorState::Render => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(JsonError::with_description_error(
+                    lang::ERROR_RENDER_ERROR,
+                    self.data,
+                )),
+            )
+                .into_response(),
+        }
     }
 }
