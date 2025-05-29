@@ -190,7 +190,7 @@ async fn main() {
         tracing::info!(r#"Discovery: [PUT, {}]"#, lang::DISCOVERY_ROUTE);
         tracing::info!(r#"Send request: [PUT, {}]"#, lang::REQUEST_ROUTE);
 
-        // Assets
+        // Assets service.
         tracing::info!(r#"Assets: [SERVICE, "/assets"]"#);
 
         // Server information.

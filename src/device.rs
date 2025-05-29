@@ -3,6 +3,7 @@ use axum::response::Redirect;
 
 use crate::error::{error_with_info, Error};
 use crate::language::lang;
+use crate::layout;
 use crate::AppState;
 
 #[cfg(feature = "fake-devices")]
@@ -163,5 +164,5 @@ pub(crate) async fn discover_devices(State(state): State<AppState>) -> Result<Re
     }*/
 
     // Redirect to index
-    Ok(Redirect::to("/"))
+    Ok(Redirect::to(layout::INDEX_ROUTE))
 }

@@ -12,8 +12,6 @@ pub(crate) async fn response_log(
     State(state): State<AppState>,
     Path(_device_id): Path<usize>,
 ) -> Result<Html<String>, Error> {
-    let controller = state.controller.lock().await;
-
     let template = error_with_info(
         &state.env,
         state.env.get_template("response-log"),

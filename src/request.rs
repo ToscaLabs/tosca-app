@@ -15,6 +15,8 @@ use serde::Deserialize;
 use serde_json::Value;
 
 use crate::error::{error_with_info, Error};
+use crate::language::lang;
+use crate::layout;
 use crate::AppState;
 
 #[derive(Deserialize)]
@@ -43,33 +45,27 @@ fn create_parameters<'a>(
                 parameters.bool(&names[i], value.is_empty());
             }
             ParameterId::U8 => {
-                let value =
-                    error_with_info(env, value.parse(), "Error in parsing the `u8` input value")?;
+                let value = error_with_info(env, value.parse(), lang::U8_ERROR)?;
                 parameters.u8(&names[i], value);
             }
             ParameterId::U16 => {
-                let value =
-                    error_with_info(env, value.parse(), "Error in parsing the `u16` input value")?;
+                let value = error_with_info(env, value.parse(), lang::U16_ERROR)?;
                 parameters.u16(&names[i], value);
             }
             ParameterId::U32 => {
-                let value =
-                    error_with_info(env, value.parse(), "Error in parsing the `u32` input value")?;
+                let value = error_with_info(env, value.parse(), lang::U32_ERROR)?;
                 parameters.u32(&names[i], value);
             }
             ParameterId::U64 | ParameterId::RangeU64 => {
-                let value =
-                    error_with_info(env, value.parse(), "Error in parsing the `u64` input value")?;
+                let value = error_with_info(env, value.parse(), lang::U64_ERROR)?;
                 parameters.u64(&names[i], value);
             }
             ParameterId::F32 => {
-                let value =
-                    error_with_info(env, value.parse(), "Error in parsing the `f32` input value")?;
+                let value = error_with_info(env, value.parse(), lang::F32_ERROR)?;
                 parameters.f32(&names[i], value);
             }
             ParameterId::F64 | ParameterId::RangeF64 => {
-                let value =
-                    error_with_info(env, value.parse(), "Error in parsing the `f64` input value")?;
+                let value = error_with_info(env, value.parse(), lang::F64_ERROR)?;
                 parameters.f64(&names[i], value);
             }
             ParameterId::CharsSequence => {
@@ -93,27 +89,27 @@ async fn _send_request(
         values,
     } = request;
 
-    // Find device sender
+    // Find device sender.
     let device_sender = error_with_info(
         env,
         controller.device(device_id),
-        "Error in finding the device",
+        lang::REQUEST_DEVICE_ERROR,
     )?;
 
     // Send request.
     let request_sender = error_with_info(
         env,
         device_sender.request(&route),
-        "Error in creating the request for device",
+        lang::REQUEST_SENDER_ERROR,
     )?;
 
-    // Obtain response
+    // Obtain response.
     if ids.is_empty() {
         // Send request.
         error_with_info(
             env,
             request_sender.send().await,
-            "Error in sending the request with default parameters",
+            lang::REQUEST_SENDER_DEFAULT_PARAMS_ERROR,
         )
     } else {
         // Create parameters.
@@ -122,7 +118,7 @@ async fn _send_request(
         error_with_info(
             env,
             request_sender.send_with_parameters(&parameters).await,
-            "Error in sending the request with parameters",
+            lang::REQUEST_SENDER_PARAMS_ERROR,
         )
     }
 }
@@ -146,17 +142,13 @@ pub(crate) async fn send_request(
     // Check response kind.
     match response {
         Response::OkBody(response) => {
-            error_with_info(
-                &env,
-                response.parse_body().await,
-                "Error in retrieving the `Ok` response",
-            )?;
+            error_with_info(&env, response.parse_body().await, lang::RESPONSE_OK_ERROR)?;
         }
         Response::SerialBody(response) => {
             error_with_info(
                 &env,
                 response.parse_body::<Value>().await,
-                "Error in retrieving the serial response",
+                lang::RESPONSE_SERIAL_ERROR,
             )?;
         }
         Response::InfoBody(_response) => {}
@@ -166,11 +158,11 @@ pub(crate) async fn send_request(
         Response::StreamBody(_) => {
             return Err(Error::description_page(
                 &env,
-                "This is a Stream Response, something went really wrong.",
+                lang::RESPONSE_WRONG_STREAM_ERROR,
             ))
         }
     }
 
     // Redirect to index
-    Ok(Redirect::to("/"))
+    Ok(Redirect::to(layout::INDEX_ROUTE))
 }

@@ -43,6 +43,26 @@ pub(crate) mod lang {
     pub(crate) const INDEX_ITEM: &str = "Home";
     pub(crate) const PRIVACY_ITEM: &str = "Privacy";
 
+    // Request page messages.
+    pub(crate) const U8_ERROR: &str = "Error in parsing the `u8` parameter value";
+    pub(crate) const U16_ERROR: &str = "Error in parsing the `u16` parameter value";
+    pub(crate) const U32_ERROR: &str = "Error in parsing the `u32` parameter value";
+    pub(crate) const U64_ERROR: &str = "Error in parsing the `u64` parameter value";
+    pub(crate) const F32_ERROR: &str = "Error in parsing the `f32` parameter value";
+    pub(crate) const F64_ERROR: &str = "Error in parsing the `f64` parameter value";
+
+    pub(crate) const REQUEST_DEVICE_ERROR: &str = "Error in finding the device";
+    pub(crate) const REQUEST_SENDER_ERROR: &str = "Error in creating the request for the device";
+    pub(crate) const REQUEST_SENDER_DEFAULT_PARAMS_ERROR: &str =
+        "Error in sending the request with default parameters";
+    pub(crate) const REQUEST_SENDER_PARAMS_ERROR: &str =
+        "Error in sending the request with input parameters";
+
+    pub(crate) const RESPONSE_OK_ERROR: &str = "Error in parsing the `Ok` response";
+    pub(crate) const RESPONSE_SERIAL_ERROR: &str = "Error in parsing the `Serial` response";
+    pub(crate) const RESPONSE_WRONG_STREAM_ERROR: &str =
+        "This is a `Stream` response, something went really wrong.";
+
     // Error page messages.
     pub(crate) const GOTO_DEVICES: &str = "Go to devices";
     pub(crate) const ASSETS_ERROR: &str = "Error in loading the `assets` directory";
@@ -114,6 +134,27 @@ pub(crate) mod lang {
     // Navbar items.
     pub(crate) const INDEX_ITEM: &str = "Dispositivi";
     pub(crate) const PRIVACY_ITEM: &str = "Privacy";
+
+    // Request page messages.
+    pub(crate) const U8_ERROR: &str = "Errore durante l'analisi del parametro di tipo `u8`";
+    pub(crate) const U16_ERROR: &str = "Errore durante l'analisi del parametro di tipo `u16`";
+    pub(crate) const U32_ERROR: &str = "Errore durante l'analisi del parametro di tipo `u32`";
+    pub(crate) const U64_ERROR: &str = "Errore durante l'analisi del parametro di tipo `u64`";
+    pub(crate) const F32_ERROR: &str = "Errore durante l'analisi del parametro di tipo `f32`";
+    pub(crate) const F64_ERROR: &str = "Errore durante l'analisi del parametro di tipo `f64`";
+
+    pub(crate) const REQUEST_DEVICE_ERROR: &str = "Errore nell'individuare il device";
+    pub(crate) const REQUEST_SENDER_ERROR: &str = "Errore nel creare la richiesta per il device";
+    pub(crate) const REQUEST_SENDER_DEFAULT_PARAMS_ERROR: &str =
+        "Errore nell'inviare la richiesta con parametri di default";
+    pub(crate) const REQUEST_SENDER_PARAMS_ERROR: &str =
+        "Errore nell'inviare la richiesta con parametri";
+
+    pub(crate) const RESPONSE_OK_ERROR: &str = "Errore durante l'analisi della risposta `Ok`";
+    pub(crate) const RESPONSE_SERIAL_ERROR: &str =
+        "Errore durante l'analisi della risposta `Serial`";
+    pub(crate) const RESPONSE_WRONG_STREAM_ERROR: &str =
+        "Questa è una risposta di tipo `Stream`, qualcosa non è andato per il verso giusto.";
 
     // Error page messages.
     pub(crate) const GOTO_DEVICES: &str = "Torna ai dispositivi";

@@ -36,8 +36,6 @@ impl RenderIndex {
 }
 
 pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>, Error> {
-    let controller = state.controller.lock().await;
-
     let template = error_with_info(
         &state.env,
         state.env.get_template("index"),
@@ -48,7 +46,10 @@ pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>,
     let all_hazards = retrieve_all_hazards();
 
     #[cfg(not(feature = "fake-devices"))]
-    let devices = controller.devices();
+    {
+        let controller = state.controller.lock().await;
+        let devices = controller.devices();
+    }
 
     #[cfg(feature = "fake-devices")]
     let devices = crate::device::fake::create_fake_devices();
