@@ -1,16 +1,15 @@
-use std::borrow::Cow;
-
 use axum::{
     extract::{Json, State},
     http::{StatusCode, Uri},
     response::{Html, IntoResponse, Response},
 };
 
-use minijinja::Environment;
+use minijinja::{context, Environment, Value};
 
 use serde::Serialize;
 
 use crate::language::lang;
+use crate::layout;
 use crate::AppState;
 
 const ASSETS_ERROR: &str = "Failed to load the `assets` directory";
@@ -50,14 +49,14 @@ struct JsonError<'a> {
 impl<'a> JsonError<'a> {
     fn with_description(description: &'a str) -> Self {
         Self {
-            description: description,
+            description,
             info: None,
         }
     }
 
     fn with_description_error(description: &'a str, info: impl std::error::Error) -> Self {
         Self {
-            description: description,
+            description,
             info: Some(info.to_string()),
         }
     }
@@ -67,12 +66,15 @@ pub(crate) struct Error(Response);
 
 impl Error {
     pub(crate) fn description_page(env: &Environment<'static>, description: &str) -> Self {
-        let template = match env.get_template("error") {
-            Ok(template) => template,
-            Err(e) => return Self::json_error(description, e),
-        };
-
-        Self((StatusCode::INTERNAL_SERVER_ERROR, Html("ciao".to_string())).into_response())
+        Self::render_template(
+            env,
+            context! {
+                title => "Ascot Controller",
+                navbar => layout::NAVBAR,
+                description => description,
+                footer => layout::footer(),
+            },
+        )
     }
 
     fn error_page(
@@ -80,12 +82,34 @@ impl Error {
         description: &str,
         info: impl std::error::Error,
     ) -> Self {
+        Self::render_template(
+            env,
+            context! {
+                title => "Ascot Controller",
+                navbar => layout::NAVBAR,
+                description => description,
+                info => info.to_string(),
+                footer => layout::footer(),
+            },
+        )
+    }
+
+    fn render_template(env: &Environment<'static>, context: Value) -> Self {
         let template = match env.get_template("error") {
             Ok(template) => template,
-            Err(e) => return Self::json_error("Error in loading the `error` template", e),
+            Err(e) => return Self::minijinja_error("Error in loading the `error` template", e),
         };
 
-        Self((StatusCode::INTERNAL_SERVER_ERROR, Html("ciao".to_string())).into_response())
+        let rendered = match template.render(context) {
+            Ok(rendered) => rendered,
+            Err(e) => return Self::minijinja_error("Error in rendering the `error` template", e),
+        };
+
+        Self((StatusCode::INTERNAL_SERVER_ERROR, Html(rendered)).into_response())
+    }
+
+    fn minijinja_error(description: &str, error: minijinja::Error) -> Self {
+        Self::json_error(description, error)
     }
 
     fn json_error(description: &str, error: impl std::error::Error) -> Self {
