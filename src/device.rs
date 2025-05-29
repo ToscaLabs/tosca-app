@@ -1,4 +1,4 @@
-use axum::extract::State;
+use axum::extract::{Path, State};
 use axum::response::Redirect;
 
 use crate::error::{error_with_info, Error};
@@ -163,6 +163,14 @@ pub(crate) async fn discover_devices(State(state): State<AppState>) -> Result<Re
         //save_devices(db, devices_info, uri).await?;
     }*/
 
+    // Redirect to index
+    Ok(Redirect::to(layout::INDEX_ROUTE))
+}
+
+pub(crate) async fn change_device_name(
+    State(_state): State<AppState>,
+    Path(_device_id): Path<usize>,
+) -> Result<Redirect, Error> {
     // Redirect to index
     Ok(Redirect::to(layout::INDEX_ROUTE))
 }

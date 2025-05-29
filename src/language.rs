@@ -10,8 +10,15 @@ pub(crate) mod lang {
     pub(crate) const STREAM_ROUTE: &str = "/view-stream/{device_id}";
     pub(crate) const EVENT_ROUTE: &str = "/event-log/{device_id}";
     pub(crate) const RESPONSE_ROUTE: &str = "/response-log/{device_id}";
+    pub(crate) const CHANGE_DEVICE_NAME_ROUTE: &str = "/change-device-name/{device_id}";
     pub(crate) const DISCOVERY_ROUTE: &str = "/discovery";
     pub(crate) const REQUEST_ROUTE: &str = "/request";
+
+    pub(crate) const PRINT_INFO_ROUTE: &str = "/view-info";
+    pub(crate) const PRINT_STREAM_ROUTE: &str = "/view-stream";
+    pub(crate) const PRINT_EVENT_ROUTE: &str = "/event-log";
+    pub(crate) const PRINT_RESPONSE_ROUTE: &str = "/response-log";
+    pub(crate) const PRINT_CHANGE_DEVICE_NAME_ROUTE: &str = "/change-device-name";
 
     // Error route errors.
     pub(crate) const ERROR_TEMPLATE_ERROR: &str = "Error in retrieving the `error` template";
@@ -72,6 +79,17 @@ pub(crate) mod lang {
     pub(crate) const NO_DEVICES: &str = "No devices found.";
     pub(crate) const DISCOVER_DEVICES: &str = "Discover Devices";
 
+    // Buttons.
+    pub(crate) const REQUEST_BUTTON_MESSAGE: &str = "Run";
+    pub(crate) const CHANGE_BUTTON_MESSAGE: &str = "Change";
+
+    // Links.
+    pub(crate) const STREAM_LINK_MESSAGE: &str = "View Stream";
+
+    // Parameters.
+    pub(crate) const NEW_DEVICE_NAME: &str = "New device name";
+    pub(crate) const CHANGE_DEVICE_NAME_PLACEHOLDER: &str = "Device name";
+
     // Logging errors.
     #[cfg(feature = "logging")]
     pub(crate) const LOG_ERROR_FILE_ERROR: &str = "Creation of log error failed";
@@ -101,8 +119,15 @@ pub(crate) mod lang {
     pub(crate) const STREAM_ROUTE: &str = "/visualizza-stream/{device_id}";
     pub(crate) const EVENT_ROUTE: &str = "/registro-eventi/{device_id}";
     pub(crate) const RESPONSE_ROUTE: &str = "/registro-risposte/{device_id}";
+    pub(crate) const CHANGE_DEVICE_NAME_ROUTE: &str = "/cambia-nome-dispositivo/{device_id}";
     pub(crate) const DISCOVERY_ROUTE: &str = "/scopri-device";
     pub(crate) const REQUEST_ROUTE: &str = "/richiesta";
+
+    pub(crate) const PRINT_INFO_ROUTE: &str = "/visualizza-informazioni";
+    pub(crate) const PRINT_STREAM_ROUTE: &str = "/visualizza-stream";
+    pub(crate) const PRINT_EVENT_ROUTE: &str = "/registro-eventi";
+    pub(crate) const PRINT_RESPONSE_ROUTE: &str = "/registro-risposte";
+    pub(crate) const PRINT_CHANGE_DEVICE_NAME_ROUTE: &str = "/cambia-nome-dispositivo";
 
     // Error route errors.
     pub(crate) const ERROR_TEMPLATE_ERROR: &str = "Errore nel trovare il template `error`";
@@ -164,6 +189,17 @@ pub(crate) mod lang {
     // Devices messages.
     pub(crate) const NO_DEVICES: &str = "Nessun dispositivo trovato.";
     pub(crate) const DISCOVER_DEVICES: &str = "Ricerca Dispositivi";
+
+    // Buttons.
+    pub(crate) const REQUEST_BUTTON_MESSAGE: &str = "Invia";
+    pub(crate) const CHANGE_BUTTON_MESSAGE: &str = "Cambia";
+
+    // Links.
+    pub(crate) const STREAM_LINK_MESSAGE: &str = "Vedi video";
+
+    // Parameters.
+    pub(crate) const NEW_DEVICE_NAME: &str = "Nuovo nome del dispositivo";
+    pub(crate) const CHANGE_DEVICE_NAME_PLACEHOLDER: &str = "Nome del dispositivo";
 
     // Logging errors.
     #[cfg(feature = "logging")]

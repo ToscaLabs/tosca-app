@@ -17,9 +17,29 @@ use crate::AppState;
 pub struct RenderIndex<'a> {
     #[serde(flatten)]
     layout: RenderLayout,
+    // Devices.
     no_devices_message: &'static str,
+    // Discover.
     discover_message: &'static str,
+    // Routes.
+    request_route: &'static str,
+    discovery_route: &'static str,
+    stream_route: &'static str,
+    info_route: &'static str,
+    event_route: &'static str,
+    response_route: &'static str,
+    change_device_name_route: &'static str,
+    // Buttons messages.
+    request_button: &'static str,
+    change_button: &'static str,
+    // Links messages.
+    stream_link: &'static str,
+    // Change device messages.
+    new_device_name: &'static str,
+    device_name_placeholder: &'static str,
+    // Devices.
     devices: Devices,
+    // Hazards.
     hazards: &'a [HazardData],
 }
 
@@ -29,6 +49,18 @@ impl<'a> RenderIndex<'a> {
             layout: RenderLayout::new(),
             no_devices_message: lang::NO_DEVICES,
             discover_message: lang::DISCOVER_DEVICES,
+            request_route: lang::REQUEST_ROUTE,
+            discovery_route: lang::DISCOVERY_ROUTE,
+            stream_route: lang::PRINT_STREAM_ROUTE,
+            info_route: lang::PRINT_INFO_ROUTE,
+            event_route: lang::PRINT_EVENT_ROUTE,
+            response_route: lang::PRINT_RESPONSE_ROUTE,
+            change_device_name_route: lang::PRINT_CHANGE_DEVICE_NAME_ROUTE,
+            request_button: lang::REQUEST_BUTTON_MESSAGE,
+            change_button: lang::CHANGE_BUTTON_MESSAGE,
+            stream_link: lang::STREAM_LINK_MESSAGE,
+            new_device_name: lang::NEW_DEVICE_NAME,
+            device_name_placeholder: lang::CHANGE_DEVICE_NAME_PLACEHOLDER,
             devices,
             hazards,
         }

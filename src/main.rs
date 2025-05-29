@@ -36,7 +36,7 @@ use tokio::sync::Mutex;
 
 use tower_http::services::ServeDir;
 
-use crate::device::discover_devices;
+use crate::device::{change_device_name, discover_devices};
 use crate::error::{missing_assets, missing_route};
 use crate::event::event_log;
 use crate::index::index;
@@ -160,6 +160,7 @@ async fn main() {
         .route(lang::RESPONSE_ROUTE, get(response_log))
         .route(lang::DISCOVERY_ROUTE, post(discover_devices))
         .route(lang::REQUEST_ROUTE, post(send_request))
+        .route(lang::CHANGE_DEVICE_NAME_ROUTE, post(change_device_name))
         .nest_service("/assets", serve_dir.clone())
         .fallback_service(serve_dir)
         .fallback(missing_route)
@@ -187,8 +188,12 @@ async fn main() {
         tracing::info!(r"Response Log: GET, {}]", lang::RESPONSE_ROUTE);
 
         // Device controller commands.
-        tracing::info!(r"Discovery: [PUT, {}]", lang::DISCOVERY_ROUTE);
-        tracing::info!(r"Send request: [PUT, {}]", lang::REQUEST_ROUTE);
+        tracing::info!(r"Discovery: [POST, {}]", lang::DISCOVERY_ROUTE);
+        tracing::info!(r"Send request: [POST, {}]", lang::REQUEST_ROUTE);
+        tracing::info!(
+            r"Change device name request: [POST, {}]",
+            lang::CHANGE_DEVICE_NAME_ROUTE
+        );
 
         // Assets service.
         tracing::info!(r#"Assets: [SERVICE, "/assets"]"#);
