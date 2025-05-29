@@ -177,18 +177,18 @@ async fn main() {
     #[cfg(feature = "logging")]
     {
         // Navbar route.
-        tracing::info!(r#"Home: [GET, {}]"#, layout::INDEX_ROUTE);
+        tracing::info!(r"Home: [GET, {}]", layout::INDEX_ROUTE);
         tracing::info!(r#"Policy: GET, "/privacy"]"#);
 
         // Device GET routes.
-        tracing::info!(r#"View Info: GET, {}]"#, lang::INFO_ROUTE);
-        tracing::info!(r#"View Stream: GET, {}]"#, lang::STREAM_ROUTE);
-        tracing::info!(r#"Event Log: GET, {}]"#, lang::EVENT_ROUTE);
-        tracing::info!(r#"Response Log: GET, {}]"#, lang::RESPONSE_ROUTE);
+        tracing::info!(r"View Info: GET, {}]", lang::INFO_ROUTE);
+        tracing::info!(r"View Stream: GET, {}]", lang::STREAM_ROUTE);
+        tracing::info!(r"Event Log: GET, {}]", lang::EVENT_ROUTE);
+        tracing::info!(r"Response Log: GET, {}]", lang::RESPONSE_ROUTE);
 
         // Device controller commands.
-        tracing::info!(r#"Discovery: [PUT, {}]"#, lang::DISCOVERY_ROUTE);
-        tracing::info!(r#"Send request: [PUT, {}]"#, lang::REQUEST_ROUTE);
+        tracing::info!(r"Discovery: [PUT, {}]", lang::DISCOVERY_ROUTE);
+        tracing::info!(r"Send request: [PUT, {}]", lang::REQUEST_ROUTE);
 
         // Assets service.
         tracing::info!(r#"Assets: [SERVICE, "/assets"]"#);

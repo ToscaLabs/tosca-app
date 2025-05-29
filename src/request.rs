@@ -34,13 +34,13 @@ pub(crate) struct Request {
 
 fn create_parameters<'a>(
     env: &Environment<'static>,
-    ids: Vec<ParameterId>,
+    ids: &[ParameterId],
     names: &'a [String],
     values: Vec<String>,
 ) -> Result<Parameters<'a>, Error> {
     let mut parameters = Parameters::new();
-    for (i, value) in values.into_iter().enumerate() {
-        match ids[i] {
+    for (i, (value, id)) in values.into_iter().zip(ids).enumerate() {
+        match id {
             ParameterId::Bool => {
                 parameters.bool(&names[i], value.is_empty());
             }
@@ -76,7 +76,7 @@ fn create_parameters<'a>(
     Ok(parameters)
 }
 
-async fn _send_request(
+async fn send_controller_request(
     env: &Environment<'static>,
     controller: &Controller,
     request: Request,
@@ -113,7 +113,7 @@ async fn _send_request(
         )
     } else {
         // Create parameters.
-        let parameters = create_parameters(env, ids, &names, values)?;
+        let parameters = create_parameters(env, &ids, &names, values)?;
         // Send request with parameters.
         error_with_info(
             env,
@@ -135,7 +135,7 @@ pub(crate) async fn send_request(
     let controller = state.controller.lock().await;
 
     // Send a request and obtain a  response.
-    let response = _send_request(&env, &controller, request).await?;
+    let response = send_controller_request(&env, &controller, request).await?;
 
     // TODO: Add responses to response log.
     //
