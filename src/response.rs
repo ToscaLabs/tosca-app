@@ -3,10 +3,9 @@
 use axum::extract::{Path, State};
 use axum::response::Html;
 
-use minijinja::context;
-
 use crate::error::{error_with_info, Error};
-use crate::layout;
+use crate::language::lang;
+use crate::layout::RenderLayout;
 use crate::AppState;
 
 pub(crate) async fn response_log(
@@ -18,17 +17,13 @@ pub(crate) async fn response_log(
     let template = error_with_info(
         &state.env,
         state.env.get_template("response-log"),
-        "Response log error",
+        lang::RESPONSE_TEMPLATE_ERROR,
     )?;
 
     let rendered = error_with_info(
         &state.env,
-        template.render(context! {
-            title => "Ascot Controller",
-            navbar => layout::NAVBAR,
-            footer => layout::footer(),
-        }),
-        "Response log render error",
+        template.render(RenderLayout::new()),
+        lang::RESPONSE_RENDER_ERROR,
     )?;
 
     Ok(Html(rendered))

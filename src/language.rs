@@ -20,6 +20,13 @@ pub(crate) mod lang {
     // Stream route errors.
     pub(crate) const STREAM_TEMPLATE_ERROR: &str = "Error in retrieving the `stream` template";
     pub(crate) const STREAM_RENDER_ERROR: &str = "Error in rendering the `stream` template";
+    // Response log route errors.
+    pub(crate) const RESPONSE_TEMPLATE_ERROR: &str =
+        "Error in retrieving the `response-log` template";
+    pub(crate) const RESPONSE_RENDER_ERROR: &str = "Error in rendering the `response-log` template";
+    // Info route errors.
+    pub(crate) const INFO_TEMPLATE_ERROR: &str = "Error in retrieving the `info` template";
+    pub(crate) const INFO_RENDER_ERROR: &str = "Error in rendering the `info` template";
 
     // Navbar items.
     pub(crate) const INDEX_ITEM: &str = "Home";
@@ -73,6 +80,14 @@ pub(crate) mod lang {
     // Stream route errors.
     pub(crate) const STREAM_TEMPLATE_ERROR: &str = "Errore nel trovare il template `stream`";
     pub(crate) const STREAM_RENDER_ERROR: &str = "Errore nel renderizzare il template `stream`";
+    // Response log route errors.
+    pub(crate) const RESPONSE_TEMPLATE_ERROR: &str =
+        "Errore nel trovare il template `response-log`";
+    pub(crate) const RESPONSE_RENDER_ERROR: &str =
+        "Errore nel renderizzare il template `response-log`";
+    // Info route errors.
+    pub(crate) const INFO_TEMPLATE_ERROR: &str = "Errore nel trovare il template `info`";
+    pub(crate) const INFO_RENDER_ERROR: &str = "Errore nel renderizzare il template `info`";
 
     // Navbar items.
     pub(crate) const INDEX_ITEM: &str = "Dispositivi";

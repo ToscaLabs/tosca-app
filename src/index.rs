@@ -1,13 +1,39 @@
+use ascot::hazards::HazardData;
+
+use ascot_controller::device::Devices;
+
 use axum::extract::State;
 use axum::response::Html;
 
-use minijinja::context;
+use serde::Serialize;
 
 use crate::error::{error_with_info, Error};
 use crate::language::lang;
-use crate::layout;
+use crate::layout::RenderLayout;
 use crate::utils::retrieve_all_hazards;
 use crate::AppState;
+
+#[derive(Serialize)]
+pub struct RenderIndex {
+    #[serde(flatten)]
+    layout: RenderLayout,
+    no_devices_message: &'static str,
+    discover_message: &'static str,
+    devices: Devices,
+    hazards: [HazardData; 24],
+}
+
+impl RenderIndex {
+    fn new(devices: Devices, hazards: [HazardData; 24]) -> Self {
+        Self {
+            layout: RenderLayout::new(),
+            no_devices_message: lang::NO_DEVICES,
+            discover_message: lang::DISCOVER_DEVICES,
+            devices,
+            hazards,
+        }
+    }
+}
 
 pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>, Error> {
     let controller = state.controller.lock().await;
@@ -29,15 +55,7 @@ pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>,
 
     let rendered = error_with_info(
         &state.env,
-        template.render(context! {
-            title => "Ascot Controller",
-            navbar => layout::NAVBAR,
-            no_devices_message => lang::NO_DEVICES,
-            discover_message => lang::DISCOVER_DEVICES,
-            devices => devices,
-            hazards => all_hazards,
-            footer => layout::footer(),
-        }),
+        template.render(RenderIndex::new(devices, all_hazards)),
         lang::INDEX_RENDER_ERROR,
     )?;
 
