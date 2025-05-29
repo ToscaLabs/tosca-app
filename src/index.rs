@@ -14,17 +14,17 @@ use crate::utils::retrieve_all_hazards;
 use crate::AppState;
 
 #[derive(Serialize)]
-pub struct RenderIndex {
+pub struct RenderIndex<'a> {
     #[serde(flatten)]
     layout: RenderLayout,
     no_devices_message: &'static str,
     discover_message: &'static str,
     devices: Devices,
-    hazards: [HazardData; 24],
+    hazards: &'a [HazardData],
 }
 
-impl RenderIndex {
-    fn new(devices: Devices, hazards: [HazardData; 24]) -> Self {
+impl<'a> RenderIndex<'a> {
+    fn new(devices: Devices, hazards: &'a [HazardData]) -> Self {
         Self {
             layout: RenderLayout::new(),
             no_devices_message: lang::NO_DEVICES,
@@ -56,7 +56,7 @@ pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>,
 
     let rendered = error_with_info(
         &state.env,
-        template.render(RenderIndex::new(devices, all_hazards)),
+        template.render(RenderIndex::new(devices, &all_hazards)),
         lang::INDEX_RENDER_ERROR,
     )?;
 
