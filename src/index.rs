@@ -14,29 +14,101 @@ use crate::utils::retrieve_all_hazards;
 use crate::AppState;
 
 #[derive(Serialize)]
-pub struct RenderIndex<'a> {
-    #[serde(flatten)]
-    layout: RenderLayout,
-    // Devices.
+struct RenderDevice {
+    // No devices message.
     no_devices_message: &'static str,
-    // Discover.
+    // Discover devices.
     discover_message: &'static str,
-    // Routes.
+    // Change device message.
+    new_device_name: &'static str,
+    // Device name placeholder.
+    device_name_placeholder: &'static str,
+}
+
+impl RenderDevice {
+    const fn new() -> Self {
+        Self {
+            no_devices_message: lang::NO_DEVICES,
+            discover_message: lang::DISCOVER_DEVICES,
+            new_device_name: lang::NEW_DEVICE_NAME,
+            device_name_placeholder: lang::CHANGE_DEVICE_NAME_PLACEHOLDER,
+        }
+    }
+}
+
+#[derive(Serialize)]
+struct RenderRoutes {
     request_route: &'static str,
     discovery_route: &'static str,
     stream_route: &'static str,
     info_route: &'static str,
     event_route: &'static str,
-    response_route: &'static str,
+    response_log_route: &'static str,
     change_device_name_route: &'static str,
+}
+
+impl RenderRoutes {
+    const fn new() -> Self {
+        Self {
+            request_route: lang::REQUEST_ROUTE,
+            discovery_route: lang::DISCOVERY_ROUTE,
+            stream_route: lang::PRINT_STREAM_ROUTE,
+            info_route: lang::PRINT_INFO_ROUTE,
+            event_route: lang::PRINT_EVENT_ROUTE,
+            response_log_route: lang::PRINT_RESPONSE_LOG_ROUTE,
+            change_device_name_route: lang::PRINT_CHANGE_DEVICE_NAME_ROUTE,
+        }
+    }
+}
+
+#[derive(Serialize)]
+struct RenderButtons {
     // Buttons messages.
     request_button: &'static str,
     change_button: &'static str,
+}
+
+impl RenderButtons {
+    const fn new() -> Self {
+        Self {
+            request_button: lang::REQUEST_BUTTON_MESSAGE,
+            change_button: lang::CHANGE_BUTTON_MESSAGE,
+        }
+    }
+}
+
+#[derive(Serialize)]
+struct RenderLinks {
     // Links messages.
     stream_link: &'static str,
-    // Change device messages.
-    new_device_name: &'static str,
-    device_name_placeholder: &'static str,
+    energy_link: &'static str,
+    event_link: &'static str,
+    response_log_link: &'static str,
+}
+
+impl RenderLinks {
+    const fn new() -> Self {
+        Self {
+            stream_link: lang::STREAM_LINK_MESSAGE,
+            energy_link: lang::ENERGY_LINK_MESSAGE,
+            event_link: lang::EVENT_LINK_MESSAGE,
+            response_log_link: lang::RESPONSE_LOG_LINK_MESSAGE,
+        }
+    }
+}
+
+#[derive(Serialize)]
+struct RenderIndex<'a> {
+    #[serde(flatten)]
+    layout: RenderLayout,
+    #[serde(flatten)]
+    device_render: RenderDevice,
+    #[serde(flatten)]
+    routes_render: RenderRoutes,
+    #[serde(flatten)]
+    buttons_render: RenderButtons,
+    #[serde(flatten)]
+    links_render: RenderLinks,
     // Devices.
     devices: Devices,
     // Hazards.
@@ -47,20 +119,10 @@ impl<'a> RenderIndex<'a> {
     fn new(devices: Devices, hazards: &'a [HazardData]) -> Self {
         Self {
             layout: RenderLayout::new(),
-            no_devices_message: lang::NO_DEVICES,
-            discover_message: lang::DISCOVER_DEVICES,
-            request_route: lang::REQUEST_ROUTE,
-            discovery_route: lang::DISCOVERY_ROUTE,
-            stream_route: lang::PRINT_STREAM_ROUTE,
-            info_route: lang::PRINT_INFO_ROUTE,
-            event_route: lang::PRINT_EVENT_ROUTE,
-            response_route: lang::PRINT_RESPONSE_ROUTE,
-            change_device_name_route: lang::PRINT_CHANGE_DEVICE_NAME_ROUTE,
-            request_button: lang::REQUEST_BUTTON_MESSAGE,
-            change_button: lang::CHANGE_BUTTON_MESSAGE,
-            stream_link: lang::STREAM_LINK_MESSAGE,
-            new_device_name: lang::NEW_DEVICE_NAME,
-            device_name_placeholder: lang::CHANGE_DEVICE_NAME_PLACEHOLDER,
+            device_render: RenderDevice::new(),
+            routes_render: RenderRoutes::new(),
+            buttons_render: RenderButtons::new(),
+            links_render: RenderLinks::new(),
             devices,
             hazards,
         }

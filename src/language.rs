@@ -17,7 +17,7 @@ pub(crate) mod lang {
     pub(crate) const PRINT_INFO_ROUTE: &str = "/view-info";
     pub(crate) const PRINT_STREAM_ROUTE: &str = "/view-stream";
     pub(crate) const PRINT_EVENT_ROUTE: &str = "/event-log";
-    pub(crate) const PRINT_RESPONSE_ROUTE: &str = "/response-log";
+    pub(crate) const PRINT_RESPONSE_LOG_ROUTE: &str = "/response-log";
     pub(crate) const PRINT_CHANGE_DEVICE_NAME_ROUTE: &str = "/change-device-name";
 
     // Error route errors.
@@ -85,6 +85,9 @@ pub(crate) mod lang {
 
     // Links.
     pub(crate) const STREAM_LINK_MESSAGE: &str = "View Stream";
+    pub(crate) const ENERGY_LINK_MESSAGE: &str = "Energy Info";
+    pub(crate) const EVENT_LINK_MESSAGE: &str = "Event Log";
+    pub(crate) const RESPONSE_LOG_LINK_MESSAGE: &str = "Response Log";
 
     // Parameters.
     pub(crate) const NEW_DEVICE_NAME: &str = "New device name";
@@ -126,7 +129,7 @@ pub(crate) mod lang {
     pub(crate) const PRINT_INFO_ROUTE: &str = "/visualizza-informazioni";
     pub(crate) const PRINT_STREAM_ROUTE: &str = "/visualizza-stream";
     pub(crate) const PRINT_EVENT_ROUTE: &str = "/registro-eventi";
-    pub(crate) const PRINT_RESPONSE_ROUTE: &str = "/registro-risposte";
+    pub(crate) const PRINT_RESPONSE_LOG_ROUTE: &str = "/registro-risposte";
     pub(crate) const PRINT_CHANGE_DEVICE_NAME_ROUTE: &str = "/cambia-nome-dispositivo";
 
     // Error route errors.
@@ -196,6 +199,9 @@ pub(crate) mod lang {
 
     // Links.
     pub(crate) const STREAM_LINK_MESSAGE: &str = "Vedi video";
+    pub(crate) const ENERGY_LINK_MESSAGE: &str = "Info Energetiche";
+    pub(crate) const EVENT_LINK_MESSAGE: &str = "Registro Eventi";
+    pub(crate) const RESPONSE_LOG_LINK_MESSAGE: &str = "Registro Risposte";
 
     // Parameters.
     pub(crate) const NEW_DEVICE_NAME: &str = "Nuovo nome del dispositivo";
