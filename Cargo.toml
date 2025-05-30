@@ -53,9 +53,8 @@ tracing-subscriber.default-features = false
 tracing-subscriber.features = ["fmt", "json", "ansi"]
 tracing-subscriber.optional = true
 
-# TODO: Remove fake devices feature from default
 [features]
-default = ["logging", "fake-devices"]
+default = ["logging"]
 logging = ["tracing", "tracing-subscriber"]
 italian = []
 fake-devices = []
