@@ -34,6 +34,7 @@ impl RenderMessages {
 }
 
 #[derive(Serialize)]
+#[allow(clippy::struct_field_names)]
 struct RenderRoutes {
     request_route: &'static str,
     discovery_route: &'static str,
@@ -59,6 +60,7 @@ impl RenderRoutes {
 }
 
 #[derive(Serialize)]
+#[allow(clippy::struct_field_names)]
 struct RenderButtons {
     // Buttons messages.
     discover_button: &'static str,
@@ -77,6 +79,7 @@ impl RenderButtons {
 }
 
 #[derive(Serialize)]
+#[allow(clippy::struct_field_names)]
 struct RenderLinks {
     // Links messages.
     stream_link: &'static str,
