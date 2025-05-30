@@ -75,8 +75,9 @@ pub(crate) mod lang {
     pub(crate) const ASSETS_ERROR: &str = "Error in loading the `assets` directory";
     pub(crate) const MISSING_ROUTE: &str = "No route for";
 
-    // Devices messages.
+    // General messages.
     pub(crate) const NO_DEVICES: &str = "No devices found.";
+    pub(crate) const NO_ROUTE_DESCRIPTION_MESSAGE: &str = "No description for this route.";
 
     // Buttons.
     pub(crate) const DISCOVER_DEVICES_BUTTON_MESSAGE: &str = "Discover Devices";
@@ -189,8 +190,9 @@ pub(crate) mod lang {
     pub(crate) const ASSETS_ERROR: &str = "Errore nel caricare la cartella `assets`";
     pub(crate) const MISSING_ROUTE: &str = "Nessun percorso chiamato";
 
-    // Devices messages.
+    // General messages.
     pub(crate) const NO_DEVICES: &str = "Nessun dispositivo trovato.";
+    pub(crate) const NO_ROUTE_DESCRIPTION_MESSAGE: &str = "Nessuna descrizione per questa route.";
 
     // Buttons.
     pub(crate) const DISCOVER_DEVICES_BUTTON_MESSAGE: &str = "Ricerca Dispositivi";

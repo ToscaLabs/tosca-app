@@ -21,6 +21,8 @@ struct RenderMessages {
     new_device_name: &'static str,
     // Device name placeholder.
     device_name_placeholder: &'static str,
+    // No route description message.
+    no_route_description_message: &'static str,
 }
 
 impl RenderMessages {
@@ -29,6 +31,7 @@ impl RenderMessages {
             no_devices_message: lang::NO_DEVICES,
             new_device_name: lang::NEW_DEVICE_NAME,
             device_name_placeholder: lang::CHANGE_DEVICE_NAME_PLACEHOLDER,
+            no_route_description_message: lang::NO_ROUTE_DESCRIPTION_MESSAGE,
         }
     }
 }
