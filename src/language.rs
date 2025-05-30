@@ -77,9 +77,9 @@ pub(crate) mod lang {
 
     // Devices messages.
     pub(crate) const NO_DEVICES: &str = "No devices found.";
-    pub(crate) const DISCOVER_DEVICES: &str = "Discover Devices";
 
     // Buttons.
+    pub(crate) const DISCOVER_DEVICES_BUTTON_MESSAGE: &str = "Discover Devices";
     pub(crate) const REQUEST_BUTTON_MESSAGE: &str = "Run";
     pub(crate) const CHANGE_BUTTON_MESSAGE: &str = "Change";
 
@@ -191,9 +191,9 @@ pub(crate) mod lang {
 
     // Devices messages.
     pub(crate) const NO_DEVICES: &str = "Nessun dispositivo trovato.";
-    pub(crate) const DISCOVER_DEVICES: &str = "Ricerca Dispositivi";
 
     // Buttons.
+    pub(crate) const DISCOVER_DEVICES_BUTTON_MESSAGE: &str = "Ricerca Dispositivi";
     pub(crate) const REQUEST_BUTTON_MESSAGE: &str = "Invia";
     pub(crate) const CHANGE_BUTTON_MESSAGE: &str = "Cambia";
 

@@ -14,22 +14,19 @@ use crate::utils::retrieve_all_hazards;
 use crate::AppState;
 
 #[derive(Serialize)]
-struct RenderDevice {
+struct RenderMessages {
     // No devices message.
     no_devices_message: &'static str,
-    // Discover devices.
-    discover_message: &'static str,
     // Change device message.
     new_device_name: &'static str,
     // Device name placeholder.
     device_name_placeholder: &'static str,
 }
 
-impl RenderDevice {
+impl RenderMessages {
     const fn new() -> Self {
         Self {
             no_devices_message: lang::NO_DEVICES,
-            discover_message: lang::DISCOVER_DEVICES,
             new_device_name: lang::NEW_DEVICE_NAME,
             device_name_placeholder: lang::CHANGE_DEVICE_NAME_PLACEHOLDER,
         }
@@ -64,6 +61,7 @@ impl RenderRoutes {
 #[derive(Serialize)]
 struct RenderButtons {
     // Buttons messages.
+    discover_button: &'static str,
     request_button: &'static str,
     change_button: &'static str,
 }
@@ -71,6 +69,7 @@ struct RenderButtons {
 impl RenderButtons {
     const fn new() -> Self {
         Self {
+            discover_button: lang::DISCOVER_DEVICES_BUTTON_MESSAGE,
             request_button: lang::REQUEST_BUTTON_MESSAGE,
             change_button: lang::CHANGE_BUTTON_MESSAGE,
         }
@@ -102,7 +101,7 @@ struct RenderIndex<'a> {
     #[serde(flatten)]
     layout: RenderLayout,
     #[serde(flatten)]
-    device_render: RenderDevice,
+    general_render: RenderMessages,
     #[serde(flatten)]
     routes_render: RenderRoutes,
     #[serde(flatten)]
@@ -119,7 +118,7 @@ impl<'a> RenderIndex<'a> {
     fn new(devices: Devices, hazards: &'a [HazardData]) -> Self {
         Self {
             layout: RenderLayout::new(),
-            device_render: RenderDevice::new(),
+            general_render: RenderMessages::new(),
             routes_render: RenderRoutes::new(),
             buttons_render: RenderButtons::new(),
             links_render: RenderLinks::new(),
