@@ -109,13 +109,13 @@ struct RenderIndex<'a> {
     #[serde(flatten)]
     links_render: RenderLinks,
     // Devices.
-    devices: Devices,
+    devices: &'a Devices,
     // Hazards.
     hazards: &'a [HazardData],
 }
 
 impl<'a> RenderIndex<'a> {
-    fn new(devices: Devices, hazards: &'a [HazardData]) -> Self {
+    fn new(devices: &'a Devices, hazards: &'a [HazardData]) -> Self {
         Self {
             layout: RenderLayout::new(),
             general_render: RenderMessages::new(),
@@ -139,13 +139,12 @@ pub(crate) async fn index(State(state): State<AppState>) -> Result<Html<String>,
     let all_hazards = retrieve_all_hazards();
 
     #[cfg(not(feature = "fake-devices"))]
-    {
-        let controller = state.controller.lock().await;
-        let devices = controller.devices();
-    }
+    let controller = state.controller.lock().await;
+    #[cfg(not(feature = "fake-devices"))]
+    let devices = controller.devices();
 
     #[cfg(feature = "fake-devices")]
-    let devices = crate::device::fake::create_fake_devices();
+    let devices = &crate::device::fake::create_fake_devices();
 
     let rendered = error_with_info(
         &state.env,
