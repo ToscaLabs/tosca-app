@@ -47,25 +47,24 @@ pub(crate) fn error_with_info<T, E: std::error::Error>(
     res: Result<T, E>,
     description: &str,
 ) -> Result<T, Error> {
-    res.map_err(|e| print_error(&e.to_string(), Error::error_page(env, description, e)))
+    res.map_err(|e| {
+        #[cfg(feature = "logging")]
+        tracing::error!("{} ~> {e}", lang::REQUEST_ERROR);
+        Error::error_page(env, description, e)
+    })
 }
 
 pub(crate) async fn missing_assets() -> Error {
-    print_error(
-        lang::ASSETS_ERROR,
-        Error::new(ErrorState::Assets, lang::ASSETS_ERROR.into()),
-    )
+    #[cfg(feature = "logging")]
+    tracing::error!("{} ~> {}", lang::REQUEST_ERROR, lang::ASSETS_ERROR);
+    Error::new(ErrorState::Assets, lang::ASSETS_ERROR.into())
 }
 
 pub(crate) async fn missing_route(State(state): State<AppState>, uri: Uri) -> Error {
     let error = format!("{} `{uri}`", lang::MISSING_ROUTE);
-    print_error(&error, Error::description_page(&state.env, &error))
-}
-
-fn print_error(description: &str, error: Error) -> Error {
     #[cfg(feature = "logging")]
-    tracing::error!("{} ~> {description}", lang::REQUEST_ERROR);
-    error
+    tracing::error!("{} ~> {error}", lang::REQUEST_ERROR);
+    Error::description_page(&state.env, &error)
 }
 
 #[derive(Serialize)]
