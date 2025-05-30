@@ -42,7 +42,7 @@ struct RenderRoutes {
     discovery_route: &'static str,
     stream_route: &'static str,
     info_route: &'static str,
-    event_route: &'static str,
+    event_log_route: &'static str,
     response_log_route: &'static str,
     change_device_name_route: &'static str,
 }
@@ -54,7 +54,7 @@ impl RenderRoutes {
             discovery_route: lang::DISCOVERY_ROUTE,
             stream_route: lang::PRINT_STREAM_ROUTE,
             info_route: lang::PRINT_INFO_ROUTE,
-            event_route: lang::PRINT_EVENT_ROUTE,
+            event_log_route: lang::PRINT_EVENT_LOG_ROUTE,
             response_log_route: lang::PRINT_RESPONSE_LOG_ROUTE,
             change_device_name_route: lang::PRINT_CHANGE_DEVICE_NAME_ROUTE,
         }
@@ -81,8 +81,8 @@ impl RenderButtons {
 struct RenderLinks {
     // Links messages.
     stream_link: &'static str,
-    energy_link: &'static str,
-    event_link: &'static str,
+    info_link: &'static str,
+    event_log_link: &'static str,
     response_log_link: &'static str,
 }
 
@@ -90,8 +90,8 @@ impl RenderLinks {
     const fn new() -> Self {
         Self {
             stream_link: lang::STREAM_LINK_MESSAGE,
-            energy_link: lang::ENERGY_LINK_MESSAGE,
-            event_link: lang::EVENT_LINK_MESSAGE,
+            info_link: lang::INFO_LINK_MESSAGE,
+            event_log_link: lang::EVENT_LOG_LINK_MESSAGE,
             response_log_link: lang::RESPONSE_LOG_LINK_MESSAGE,
         }
     }
