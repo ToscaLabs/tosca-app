@@ -1,5 +1,5 @@
 [package]
-name = "tosca"
+name = "tosca-app"
 version = "0.1.0"
 edition = "2024"
 
@@ -26,7 +26,7 @@ clap.version = "4.5"
 clap.default-features = false
 clap.features = ["derive", "std"]
 
-minijinja.version = "2.10.0"
+minijinja.version = "2.12"
 
 serde.version = "1.0"
 serde.default-features = false
