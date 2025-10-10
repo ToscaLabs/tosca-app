@@ -26,4 +26,4 @@
 #
 # Port 8123 cannot be busy because I am the one who had configured it
 # on the controller router.
-./web-controller --ip 127.0.0.1 --port 8123
+./tosca-app --ip 127.0.0.1 --port 8123
