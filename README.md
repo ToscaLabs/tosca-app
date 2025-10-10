@@ -1,9 +1,9 @@
-# `tosca`
+# `tosca-app`
 
 [![LICENSE][license badge]][license]
 
-**tosca** is a web controller for
-[Ascot](https://github.com/SoftengPoliTo/ascot) devices.
+**tosca** is a web app for managing
+[Tosca](https://github.com/SoftengPoliTo/ascot) devices.
 
 ## Building
 
@@ -47,7 +47,7 @@ cargo build --features italian
 ### Controller
 
 <!-- Links -->
-[license]: https://github.com/Luni-4/tosca/blob/master/LICENSE
+[license]: https://github.com/ToscaLab/tosca-app/blob/master/LICENSE
 
 <!-- Badges -->
 [license badge]: https://img.shields.io/badge/license-MIT-blue.svg
