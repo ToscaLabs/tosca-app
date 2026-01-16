@@ -43,6 +43,7 @@ cargo build --features italian
 - [ ] Test if the entire web app is responsive
 - [ ] Add the temperature icon and `EventSource`
 - [ ] Add hazards and modals (look at the `old-work` branch and adapt)
+- [ ] Add privacy page to block a determined request according to its hazards
 
 ### Usage
 
@@ -50,8 +51,8 @@ cargo build --features italian
 - [ ] Save a device state in some way (i.e. if the light state is false, and the incoming event state is false, do nothing. The state is not changed)
 - [ ] Check if there are some problems in using the web app, everything should be smoother as much as possible
 - [ ] Filone 2 di Smartotum
-
-
+- [ ] Parse hazards for a device, extracts all their descriptions, and save this data in an array in order to print their content on a page
+- [ ] Implement the backend for the privacy page, allowing or blocking hazards through the `tosca-controller`.
 
 <!-- Links -->
 [license]: https://github.com/ToscaLabs/tosca-app/blob/master/LICENSE
