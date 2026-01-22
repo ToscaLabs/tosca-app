@@ -1,4 +1,7 @@
+use std::collections::HashMap;
+
 use serde::Serialize;
+use tosca::hazards::{Hazard, HazardData};
 
 #[derive(Default, Serialize)]
 pub(crate) enum LightMode {
@@ -27,6 +30,7 @@ pub(crate) struct DemoLightInfo {
     off: String,
     toggle_route: String,
     toggle: String,
+    hazards: HashMap<&'static str, Vec<HazardData>>,
 }
 
 impl DemoLightInfo {
@@ -50,7 +54,30 @@ impl DemoLightInfo {
             off: t!("light.off").into_owned(),
             toggle_route: t!("light.toggle_route").into_owned(),
             toggle: t!("light.toggle").into_owned(),
+            hazards: Self::init_hazards(),
         }
+    }
+
+    fn init_hazards() -> HashMap<&'static str, Vec<HazardData>> {
+        let mut hazards = HashMap::new();
+
+        hazards.insert(
+            "on",
+            vec![
+                Hazard::FireHazard.data(),
+                Hazard::ElectricEnergyConsumption.data(),
+            ],
+        );
+        hazards.insert(
+            "off",
+            vec![
+                Hazard::FireHazard.data(),
+                Hazard::ElectricEnergyConsumption.data(),
+            ],
+        );
+        hazards.insert("toggle", vec![]);
+
+        hazards
     }
 }
 
