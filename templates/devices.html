@@ -63,7 +63,7 @@
 </div>
 {% endmacro %}
 
-<section class="device-section">
+<section class="card-section">
     <div class="container">
         <div class="cards-grid">
             {% for device in devices %}
@@ -293,7 +293,7 @@ window.addEventListener("beforeunload", () => {
 
 /* === Modals === */
 function openModal(modal) {
-    modal.style.display = 'flex';
+    modal.style.display = 'grid';
     // Prevent background scrolling
     document.body.classList.add('modal-open');
 }

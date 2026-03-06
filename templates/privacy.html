@@ -1,7 +1,7 @@
 {% extends "layout" %}
 
 {% block page %}
-   <section class="unique-section">
+   <section class="card-section">
         <div class="container">
             <div class="cards-grid">
                 {% for category in categories %}
@@ -60,7 +60,7 @@
     <script type="module">
         /* === Modals === */
         function openModal(modal) {
-            modal.style.display = 'flex';
+            modal.style.display = 'grid';
             // Prevent background scrolling
             document.body.classList.add('modal-open');
         }
