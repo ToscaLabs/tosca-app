@@ -177,7 +177,7 @@ section {
 }
 
 .device-section {
-  margin-bottom: 3.5rem;
+  padding: 4rem 0 2rem;
   text-align: center;
 }
 
@@ -846,6 +846,10 @@ body.modal-open {
 
 /* Tablets and large mobile */
 @media screen and (max-width: 768px) {
+  section {
+    padding: 4rem 0;
+  }
+
   .nav-menu {
     position: fixed;
     top: calc(var(--header-height) + var(--header-border-size));
