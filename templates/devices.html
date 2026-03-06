@@ -186,19 +186,21 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 });
 
+
                 // If the form is inside the "modes" section, visually update the 'selected' class
                 if (form.closest('.modes')) {
                     const buttons = form.closest('.modes').querySelectorAll('button');
                     buttons.forEach(btn => btn.classList.remove('selected'));
                     form.querySelector('button').classList.add('selected');
-                }
 
-                // Disable the request buttons when the mode is not manual
-                const buttonContainer = document.querySelector('.button-container');
-                if (formData.get("device_state") != "manual") {
-                    buttonContainer.classList.add('button-container-disabled');
-                } else {
-                    buttonContainer.classList.remove('button-container-disabled');
+                    // Disable the request buttons when the mode is not manual
+                    const deviceState = formData.get("device_state");
+                    const buttonContainer = document.querySelector('.button-container');
+                    if (deviceState !== "manual") {
+                        buttonContainer.classList.add('button-container-disabled');
+                    } else {
+                        buttonContainer.classList.remove('button-container-disabled');
+                    }
                 }
             } catch (error) {
                 console.error("Error while sendind the command:", error);
