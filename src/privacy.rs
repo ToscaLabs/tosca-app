@@ -78,6 +78,7 @@ impl CategoryCard {
 #[derive(Serialize)]
 pub(crate) struct Privacy {
     nav_link_selected: &'static str,
+    cards_description: Cow<'static, str>,
     categories: Vec<CategoryCard>,
 }
 
@@ -88,6 +89,7 @@ impl Privacy {
     ) -> Self {
         Self {
             nav_link_selected: PRIVACY_LINK,
+            cards_description: t!("privacy_hazards_card.description"),
             categories: ALL_CATEGORIES
                 .iter()
                 .map(|c| CategoryCard::new(*c, &is_category_disabled, &is_hazard_disabled))

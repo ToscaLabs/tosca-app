@@ -58,8 +58,10 @@ rights = "Tutti i diritti riservati."
 title = "Categorie di Rischi"
 description_title = "Modalità d'uso"
 description = """
-Seleziona una o più categorie di rischio per disabilitare tutti i comandi dei
-dispositivi associati alle categorie selezionate.
+Seleziona una o più rischi per disabilitare i comandi dei dispositivi associati.
+<br><br>
+Seleziona “Blocca tutti” per disabilitare tutti i comandi dei dispositivi
+associati a questa categoria di rischio.
 """
 hazards_label = "Rischi"
 block_all_label = "Blocca tutti"

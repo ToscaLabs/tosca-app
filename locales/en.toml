@@ -58,8 +58,10 @@ rights = "All rights reserved."
 title = "Hazard Categories"
 description_title = "Usage modes"
 description = """
-Select one or more hazard categories to disable all device commands associated
-with the selected categories.
+Select one or more hazards to disable the commands of the associated devices.
+<br><br>
+Select “Block All” to disable all commands of devices associated with this
+hazard category.
 """
 block_all_label = "Block all"
 hazards_label = "Hazards"
