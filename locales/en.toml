@@ -55,9 +55,11 @@ discovery = "Discover Devices"
 rights = "All rights reserved."
 
 [privacy_hazards_card]
-description = """
+usage = "Usage Instructions"
+usage_description = """
 Select one or more hazards to disable the commands of the associated devices.
-<br><br>
+"""
+all_block_description = """
 Select “Block All” to disable all commands of devices associated with this
 hazard category.
 """

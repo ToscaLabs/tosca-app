@@ -55,9 +55,11 @@ discovery = "Ricerca Dispositivi"
 rights = "Tutti i diritti riservati."
 
 [privacy_hazards_card]
-description = """
+usage = "Istruzioni d'uso"
+usage_description = """
 Seleziona una o più rischi per disabilitare i comandi dei dispositivi associati.
-<br><br>
+"""
+all_block_description = """
 Seleziona “Blocca tutti” per disabilitare tutti i comandi dei dispositivi
 associati a questa categoria di rischio.
 """
