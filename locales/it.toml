@@ -55,8 +55,6 @@ discovery = "Ricerca Dispositivi"
 rights = "Tutti i diritti riservati."
 
 [privacy_hazards_card]
-title = "Categorie di Rischi"
-description_title = "Modalità d'uso"
 description = """
 Seleziona una o più rischi per disabilitare i comandi dei dispositivi associati.
 <br><br>

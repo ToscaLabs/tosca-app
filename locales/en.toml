@@ -55,8 +55,6 @@ discovery = "Discover Devices"
 rights = "All rights reserved."
 
 [privacy_hazards_card]
-title = "Hazard Categories"
-description_title = "Usage modes"
 description = """
 Select one or more hazards to disable the commands of the associated devices.
 <br><br>
