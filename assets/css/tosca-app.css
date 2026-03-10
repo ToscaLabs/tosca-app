@@ -163,6 +163,10 @@ section {
 }
 
 /* Spacing */
+.full-width {
+  width: 100%;
+}
+
 .container {
   width: 100%;
   max-width: var(--max-width);
@@ -389,7 +393,7 @@ section {
 }
 
 /* Buttons */
-.button-container {
+.buttons-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -397,18 +401,9 @@ section {
   gap: 1rem;
 }
 
-.button-container-disabled {
+.buttons-container-disabled {
   pointer-events: none;
   opacity: 0.5;
-}
-
-.button-vertical-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  width: 100%;
 }
 
 .button {
@@ -438,14 +433,8 @@ section {
 }
 
 .button-medium {
-  padding: 0.8rem 2rem;
-  font-size: 1.5rem;
-}
-
-.button-medium-vertical {
-  width: 100%;
-  padding: 0.8rem 2rem;
-  font-size: 1.5rem;
+  padding: 0.8rem 1rem;
+  font-size: 1.3rem;
 }
 
 .button-medium-large {
@@ -683,7 +672,7 @@ section {
 .card h3 {
   width: 100%;
   margin-bottom: 1.2rem;
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: var(--card-title-color);
 }
@@ -786,9 +775,8 @@ section {
   padding: 0 1rem;
   border-radius: 50%;
   background: var(--mode-background-color);
-  font-size: 0.77rem;
+  font-size: 0.85rem;
   font-weight: 400;
-  word-break: keep-all;
   cursor: pointer;
   transition: background-color 0.2s ease, opacity 0.2s ease;
 }
@@ -845,7 +833,7 @@ body.modal-open {
   justify-content: center;
   padding-top: 1rem;
   font-weight: 500;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: var(--footer-text-color);
 }
 
@@ -972,8 +960,7 @@ body.modal-open {
     font-size: 1.3rem;
   }
 
-  .error-500,
-  .error-not-500 {
+  .error-500, .error-not-500 {
     font-size: 1.8rem;
   }
 
@@ -999,7 +986,7 @@ body.modal-open {
 
   .pill-text {
     padding: 0.55rem 0.75rem;
-    font-size: 0.95rem;
+    font-size: 1.1rem;
   }
 
   .pill-icon {
@@ -1029,11 +1016,11 @@ body.modal-open {
   }
 
   .mode {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
   }
 
   .footer-info {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 }
 
@@ -1058,8 +1045,7 @@ body.modal-open {
     font-size: 1.2rem;
   }
 
-  .error-500,
-  .error-not-500 {
+  .error-500, .error-not-500 {
     font-size: 1.6rem;
   }
 
@@ -1092,7 +1078,7 @@ body.modal-open {
   .pill-text {
     flex: 1;
     padding: 0.45rem 0.75rem;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
   }
 
   .pill-icon {
@@ -1110,15 +1096,15 @@ body.modal-open {
   }
 
   .card h3 {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
   }
 
   .mode {
-    font-size: 0.7rem;
+    font-size: 0.85rem;
   }
 
   .footer-info {
-    font-size: 1rem;
+    font-size: 1.15rem;
   }
 }
 
@@ -1175,7 +1161,7 @@ body.modal-open {
   .pill-text {
     flex: 1;
     padding: 0.35rem 0.65rem;
-    font-size: 0.85rem;
+    font-size: 1.1rem;
   }
 
   .pill-icon {
@@ -1197,7 +1183,7 @@ body.modal-open {
   }
 
   .card h3 {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
 
   .modes {
@@ -1209,10 +1195,10 @@ body.modal-open {
     min-width: 70px;
     width: 70px;
     height: 70px;
-    font-size: 0.65rem;
+    font-size: 0.85rem;
   }
 
   .footer-info {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 }

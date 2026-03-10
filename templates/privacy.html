@@ -21,19 +21,19 @@
                         <button
                             type="button"
                             data-category="{{ category.id }}"
-                            class="button button-medium-vertical hazard-{{ category_id }} hazard-{{ category_id }}-border category-button-toggle {% if category.is_disabled %}button-disabled{% endif %}">
+                            class="button button-medium full-width hazard-{{ category_id }} hazard-{{ category_id }}-border category-button-toggle {% if category.is_disabled %}button-disabled{% endif %}">
                             {{ category.block_all_label }}
                         </button>
                         <div class="hazard-header">
                             <h3>{{ category.hazards_label }}</h3>
                         </div>
-                        <div class="button-vertical-container">
+                        <div class="buttons-container full-width">
                             {% for hazard in category.hazards %}
                             <button
                                 type="button"
                                 data-hazard-id="{{ hazard.id }}"
                                 {% if category.is_disabled %}disabled{% endif %}
-                                class="button button-medium-vertical hazard-{{ category_id }} hazard-{{ category_id }}-border hazard-toggle
+                                class="button button-medium full-width hazard-{{ category_id }} hazard-{{ category_id }}-border hazard-toggle
                                 {% if hazard.is_disabled %}button-disabled{% endif %}">
                                 {{ hazard.name }}
                             </button>
