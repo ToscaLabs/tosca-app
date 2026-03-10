@@ -72,7 +72,7 @@ route_title_description = "Descrizione comando"
 hazard_title_description = "Rischi"
 
 [light]
-description = "Questa è una luce dotata di un sensore di temperatura."
+description = "Una luce dotata di un sensore di temperatura."
 modes = "Modalità"
 manual = "Manuale"
 motion_detection = "Rileva movimento"

@@ -72,7 +72,7 @@ route_title_description = "Route Description"
 hazard_title_description = "Hazards"
 
 [light]
-description = "This is a light equipped with a temperature sensor."
+description = "A light equipped with a temperature sensor."
 modes = "Modes"
 manual = "Manual"
 motion_detection = "Motion Detection"
