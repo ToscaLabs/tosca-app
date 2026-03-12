@@ -57,7 +57,7 @@ rights = "Tutti i diritti riservati."
 [privacy_hazards_card]
 usage = "Istruzioni d'uso"
 usage_description = """
-Seleziona una o più rischi per disabilitare i comandi dei dispositivi associati.
+Seleziona uno o più rischi per disabilitare i comandi dei dispositivi associati.
 """
 all_block_description = """
 Seleziona “Blocca tutti” per disabilitare tutti i comandi dei dispositivi
