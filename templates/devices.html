@@ -130,13 +130,13 @@
             </div>
             {% endfor %}
         </div>
-        <form id="spinner" action="{{ discovery_route }}" method="post">
+        <!--<form id="spinner" action="{{ discovery_route }}" method="post">
             <button id="discovery" class="button button-info button-medium" type="submit">{{ discovery_button }}</button>
-        </form>
+        </form>-->
     </div>
 </section>
 
-{{ spinner(spinner_text) }}
+<!--{{ spinner(spinner_text) }}-->
 
 {% for device in devices %}
 <div class="modal-overlay" id="device-modal-{{ device.id }}">
@@ -154,7 +154,7 @@
 
 {% endfor %}
 
-{{ spinner_js() }}
+<!--{{ spinner_js() }}-->
 
 <script type="module">
 
@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Stop listening to events
-document.getElementById("discovery").onclick = function() {
+/*document.getElementById("discovery").onclick = function() {
     {% for device in devices %}
         {% if device.has_events %}
             if (eventSource{{ device.id }}) {
@@ -278,7 +278,7 @@ document.getElementById("discovery").onclick = function() {
             }
         {% endif %}
     {% endfor %}
-};
+};*/
 
 // Always close the events source on page unload
 window.addEventListener("beforeunload", () => {
