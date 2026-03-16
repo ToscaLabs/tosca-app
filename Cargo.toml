@@ -27,7 +27,7 @@ chrono.features = ["clock"]
 futures.version = "0.3.32"
 futures.default-features = false
 
-minijinja.version = "2.17"
+minijinja.version = "2.18"
 
 rust-i18n.version = "3.1.5"
 
