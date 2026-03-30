@@ -820,6 +820,7 @@ body.modal-open {
   margin-bottom: 1em;
   line-height: 1.6;
   white-space: pre-wrap;
+  font-size: 1.2rem;
 }
 
 /* Footer */
