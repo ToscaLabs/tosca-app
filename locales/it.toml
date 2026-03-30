@@ -75,7 +75,7 @@ hazard_title_description = "Rischi"
 description = "Una luce dotata di un sensore di temperatura."
 modes = "Modalità"
 manual = "Manuale"
-motion_detection = "Rileva movimento"
+motion_detection = "Rileva Movimento"
 ambient_light = "Luce Ambientale"
 commands = "Comandi"
 
