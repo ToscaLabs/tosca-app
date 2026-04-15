@@ -12,7 +12,7 @@ tosca.version = "0.1.0"
 
 tosca-controller.version = "0.1.0"
 
-axum.version = "0.8.0"
+axum.version = "0.8.9"
 axum.default-features = false
 axum.features = ["tokio", "http1", "http2", "json"]
 
