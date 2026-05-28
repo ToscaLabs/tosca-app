@@ -29,7 +29,7 @@ futures.default-features = false
 
 minijinja.version = "2.20"
 
-rust-i18n.version = "4.0.0"
+rust-i18n.version = "4.1.0"
 
 serde.version = "1.0"
 serde.default-features = false
